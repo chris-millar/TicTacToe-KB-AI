@@ -15,7 +15,12 @@ namespace TicTacToe
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            //Application.Run(new MainUI());
+
+            //AppManager.Initialize();
+            //Application.Run(MainUI.Instance);
+            AppManager manager = new AppManager();
+            Application.Run(manager.ui);
         }
     }
 }
