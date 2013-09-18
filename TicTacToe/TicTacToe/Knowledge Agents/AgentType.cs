@@ -9,7 +9,6 @@ namespace TicTacToe
     {
         public static AgentType Naive { get { return new AgentType("Naive", AgentTypeEnum.Naive); } }
         public static AgentType Smart { get { return new AgentType("Smart", AgentTypeEnum.Smart); } }
-
     }
 
     public class AgentType

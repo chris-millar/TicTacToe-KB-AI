@@ -10,16 +10,6 @@ namespace TicTacToe
     {
         bool consoleMode;
 
-        /*
-        public event EventHandler NewInfo;
-        private void onNewInfo(String message)
-        {
-            if (NewInfo != null)
-            {
-                NewInfo(message, new EventArgs());
-            }
-        }
-        */
           
         public SmartT3Agent()
         {
@@ -151,7 +141,7 @@ namespace TicTacToe
                 foreach (ArrayList list in winSetsWithPos)
                 {
                     var otherTwoPositions = from TerritoryPosition position in list
-                                            where opp.ownedTerritories.Contains(position)
+                                            where oppTerr.Contains(position)
                                             select position;
 
                     int count = 0;

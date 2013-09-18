@@ -12,7 +12,7 @@ namespace TicTacToe
 
         public Agent playerOneAgent;
         public Agent playerTwoAgent;
-        public TicTacToeGame game;
+        public TicTacToeGame _game;
 
         public AppManager()
         {
@@ -37,14 +37,28 @@ namespace TicTacToe
 
         void ui_StartButtonPressed(object sender, EventArgs e)
         {
-            if (game == null || game.canStartNewGame())
+            if (_game == null || _game.canStartNewGame())
             {
-                game = new TicTacToeGame(playerOneAgent, playerTwoAgent);
-                game.NewInfo += new EventHandler(game_NewInfo);
+                if (_game != null)
+                {
+                    UnhookEventListener();
+                }
+
+                _game = new TicTacToeGame(playerOneAgent, playerTwoAgent);
+                _game.NewInfo += new EventHandler(game_NewInfo);
 
                 ui.ResetFauxConsole();
 
-                game.start();
+                _game.start();
+            }
+        }
+
+        private void UnhookEventListener()
+        {
+            if (_game != null)
+            {
+                _game.NewInfo -= game_NewInfo;
+                _game = null;
             }
         }
 

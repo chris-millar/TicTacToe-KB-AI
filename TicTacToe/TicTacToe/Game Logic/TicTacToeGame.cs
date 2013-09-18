@@ -221,9 +221,9 @@ namespace TicTacToe
 
         private void printBoard()
         {
-            String line1 = String.Format("\n{0} | {1} | {2}", board[0].symbol, board[1].symbol, board[2].symbol);
-            String line2 = String.Format("\n{0} | {1} | {2}", board[3].symbol, board[4].symbol, board[5].symbol);
-            String line3 = String.Format("\n{0} | {1} | {2}", board[6].symbol, board[7].symbol, board[8].symbol);
+            String line1 = String.Format("\n{0}  |  {1}  |  {2}", board[0].symbol, board[1].symbol, board[2].symbol);
+            String line2 = String.Format("\n{0}  |  {1}  |  {2}", board[3].symbol, board[4].symbol, board[5].symbol);
+            String line3 = String.Format("\n{0}  |  {1}  |  {2}", board[6].symbol, board[7].symbol, board[8].symbol);
 
             if (consoleMode)
             {

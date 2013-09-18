@@ -51,7 +51,7 @@
     <Compile Include="Game Logic\GameVocabEnum.cs" />
     <Compile Include="Knowledge Agents\Agent.cs" />
     <Compile Include="AppManager.cs" />
-    <Compile Include="Knowledge Agents\AgentTypeEnum.cs" />
+    <Compile Include="Knowledge Agents\AgentType.cs" />
     <Compile Include="UI\IODefnEnum.cs" />
     <Compile Include="UI\MainUI.cs">
       <SubType>Form</SubType>
