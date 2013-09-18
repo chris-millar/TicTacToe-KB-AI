@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TicTacToe
 {
-    class Territory
+    public class Territory
     {
         private Player owner;
         public TerritoryPosition position;

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TicTacToe
 {
-    class TicTacToeGame
+    public class TicTacToeGame
     {
         Player playerOne;
         Player playerTwo;
@@ -238,6 +238,11 @@ namespace TicTacToe
                 onNewInfo(line3);
             }
 
+        }
+
+        public bool canStartNewGame()
+        {
+            return true;
         }
         
         void playerOne_NewInfo(object sender, EventArgs e)

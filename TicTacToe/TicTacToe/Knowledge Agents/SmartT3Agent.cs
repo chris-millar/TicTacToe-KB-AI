@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TicTacToe
 {
-    public class SmartTicTacToeAgent : Agent
+    public class SmartT3Agent : Agent
     {
         bool consoleMode;
 
@@ -21,7 +21,7 @@ namespace TicTacToe
         }
         */
           
-        public SmartTicTacToeAgent()
+        public SmartT3Agent()
         {
             consoleMode = false;
         }

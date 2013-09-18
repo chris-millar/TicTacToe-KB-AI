@@ -6,12 +6,12 @@ using System.Text;
 
 namespace TicTacToe
 {
-    public class NaiveTicTacToeAgent : Agent
+    public class NaiveT3Agent : Agent
     {
         Random rand;
         bool consoleMode;
 
-        public NaiveTicTacToeAgent()
+        public NaiveT3Agent()
         {
             rand = new Random();
             consoleMode = false;
