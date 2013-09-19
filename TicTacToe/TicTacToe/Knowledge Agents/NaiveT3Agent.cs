@@ -17,7 +17,7 @@ namespace TicTacToe
             consoleMode = false;
         }
 
-        public override TerritoryPosition decideNextMove(ArrayList avail, ArrayList winDef, ArrayList oppTerr, ArrayList myTerr, ArrayList board, Player opp)
+        public override TerritoryPosition decideNextMove(ArrayList avail, ArrayList oppTerr, ArrayList myTerr, ArrayList board)
         {
             int index = rand.Next(0, avail.Count);
             TerritoryPosition pick = (TerritoryPosition) avail[index];
@@ -38,7 +38,7 @@ namespace TicTacToe
         
         public override String ToString()
         {
-            return "Naive TicTacToeAgent";
+            return "Naive T3Agent";
         }
     }
 }

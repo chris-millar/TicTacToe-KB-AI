@@ -61,6 +61,8 @@ namespace TicTacToe
 
         public void start()
         {
+            giveAgentsStaticDomainKnowledge();
+
             currTurnPlayer = playerOne;
             otherPlayer = playerTwo;
 
@@ -103,7 +105,7 @@ namespace TicTacToe
                 onNewInfo(turnMessage);
 
             //Decide move & make it
-            claimTerritory(currTurnPlayer.makeMove(availList, winSetDefinitions, otherPlayer.ownedTerritories, boardList, otherPlayer));
+            claimTerritory(currTurnPlayer.makeMove(availList, otherPlayer.ownedTerritories, boardList));
 
             printBoard();
 
@@ -217,6 +219,12 @@ namespace TicTacToe
             winSetDefinitions.Add(winSet5);
             winSetDefinitions.Add(winSet6);
             winSetDefinitions.Add(winSet7);
+        }
+
+        private void giveAgentsStaticDomainKnowledge()
+        {
+            playerOne.setWinSetDefinitions(winSetDefinitions);
+            playerTwo.setWinSetDefinitions(winSetDefinitions);
         }
 
         private void printBoard()

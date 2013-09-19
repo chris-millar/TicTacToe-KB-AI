@@ -40,12 +40,17 @@ namespace TicTacToe
             onNewInfo(message);
         }
 
-        public TerritoryPosition makeMove(ArrayList availTerritories, ArrayList winSetDef, ArrayList ownedByOtherPlayer, ArrayList board, Player opp)
+        public TerritoryPosition makeMove(ArrayList availTerritories, ArrayList ownedByOtherPlayer, ArrayList board)
         {
-            Console.Write(String.Format("Turn: {0}", name));
-            TerritoryPosition claimed = agent.decideNextMove(availTerritories, winSetDef, ownedByOtherPlayer, ownedTerritories, board, opp);
+            //Console.Write(String.Format("Turn: {0}", name));
+            TerritoryPosition claimed = agent.decideNextMove(availTerritories, ownedByOtherPlayer, ownedTerritories, board);
             ownedTerritories.Add(claimed);
             return claimed;
+        }
+
+        public void setWinSetDefinitions(ArrayList definitions)
+        {
+            agent.setWinSetDefinitions(definitions);
         }
 
         public String getSymbol()

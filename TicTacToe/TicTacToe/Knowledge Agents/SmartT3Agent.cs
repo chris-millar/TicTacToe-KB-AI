@@ -16,7 +16,7 @@ namespace TicTacToe
             consoleMode = false;
         }
 
-        public override TerritoryPosition decideNextMove(ArrayList avail, ArrayList winDef, ArrayList oppTerr, ArrayList myTerr, ArrayList board, Player opp)
+        public override TerritoryPosition decideNextMove(ArrayList avail, ArrayList oppTerr, ArrayList myTerr, ArrayList board)
         {
             Random rand = new Random();
             
@@ -41,7 +41,8 @@ namespace TicTacToe
             TerritoryPosition pick;
 
             //RULE 2: If there is an avail territory that will make me win, Then pick that territory.
-            pick = canWin(avail, winDef, board);
+            pick = canWin(avail, board, myTerr);
+            Console.WriteLine(String.Format("{0} canWin() says: {1}", parent.name, pick));
             if (pick != TerritoryPosition.NULL)
             {
                 message = String.Format(" - Smart Agent: \t Can Win [{0}]", pick);
@@ -57,7 +58,7 @@ namespace TicTacToe
             }
 
             //Rule 3: If there is an avail territory that will make opponent win, Then pick that territory to block them.
-            pick = canBlock(avail, winDef, board, oppTerr, opp);
+            pick = canBlock(avail, board, oppTerr);
             if (pick != TerritoryPosition.NULL)
             {
                 message = String.Format(" - Smart Agent: \t Can Block [{0}]", pick);
@@ -74,7 +75,7 @@ namespace TicTacToe
 
             //RULE 4: If there is an avail territory in a winSet from which I already own a territory and my opponent does not own a territory,
             //        Then choose one of the other two avail territories in that winSet.
-            pick = canSetUpNextTurnWin(avail, winDef, board, oppTerr, opp, myTerr);
+            pick = canSetUpNextTurnWin(avail, board, oppTerr, myTerr);
             if (pick != TerritoryPosition.NULL)
             {
                 message = String.Format(" - Smart Agent: \t Can Set-Up-Next-Turn-Win [{0}]", pick);
@@ -91,7 +92,7 @@ namespace TicTacToe
 
             //RULE 5: If there are avail territories, Then pick my one randomly.
             pick = (TerritoryPosition)avail[rand.Next(0, avail.Count)];
-            message = String.Format(" - Smart Agent: \t Can Win [{0}]", pick);
+            message = String.Format(" - Smart Agent: \t Pick Rand b/c No-Good-Moves-Left [{0}]", pick);
             if (consoleMode)
             {
                 Console.WriteLine(message);
@@ -103,26 +104,46 @@ namespace TicTacToe
             return pick;
         }
 
-        private TerritoryPosition canWin(ArrayList avail, ArrayList winDef, ArrayList board)
+        private TerritoryPosition canWin(ArrayList avail, ArrayList board, ArrayList myTerr)
         {
+            ArrayList winningPositions = new ArrayList();
+            ArrayList conditionForInclusion = new ArrayList();
+            ArrayList winningSetDefn;
+
             foreach (TerritoryPosition posToConsider in avail)
             {
-                foreach (ArrayList list in winDef)
+                foreach (ArrayList list in WinSetDefinitions)
                 {
+                    winningSetDefn = list;
                     if (list.Contains(posToConsider))
                     {
                         int ownCount = 0;
                         foreach (TerritoryPosition pos in list)
                         {
-                            if (parent.doOwnTerrPosition(pos) || pos == posToConsider)
+                            if (myTerr.Contains(pos))
                             {
+                                winningPositions.Insert(ownCount, pos);
+                                conditionForInclusion.Insert(ownCount, "Own");
+                                ownCount++;
+                            }
+                            else if (pos == posToConsider)
+                            {
+                                winningPositions.Insert(ownCount, pos);
+                                conditionForInclusion.Insert(ownCount, "Avail");
                                 ownCount++;
                             }
                         }
                         if (ownCount == 3)
                         {
+                            Console.WriteLine(String.Format("WinSet I think I can win from: {0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
+                            Console.WriteLine(String.Format("CanWin because: [ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ", 
+                                winningPositions[0], conditionForInclusion[0],
+                                winningPositions[1], conditionForInclusion[1],
+                                winningPositions[2], conditionForInclusion[2]));
                             return posToConsider;
                         }
+                        winningPositions.Clear();
+                        conditionForInclusion.Clear();
                     }
                 }
             }
@@ -130,11 +151,11 @@ namespace TicTacToe
             return TerritoryPosition.NULL;
         }
 
-        private TerritoryPosition canBlock(ArrayList avail, ArrayList winDef, ArrayList board, ArrayList oppTerr, Player opp)
+        private TerritoryPosition canBlock(ArrayList avail, ArrayList board, ArrayList oppTerr)
         {
             foreach (TerritoryPosition posToConsider in avail)
             {
-                var winSetsWithPos = from ArrayList list in winDef
+                var winSetsWithPos = from ArrayList list in WinSetDefinitions
                                      where list.Contains(posToConsider)
                                      select list;
 
@@ -160,11 +181,11 @@ namespace TicTacToe
             return TerritoryPosition.NULL;
         }
 
-        private TerritoryPosition canSetUpNextTurnWin(ArrayList avail, ArrayList winDef, ArrayList board, ArrayList oppTerr, Player opp, ArrayList myTerr)
+        private TerritoryPosition canSetUpNextTurnWin(ArrayList avail, ArrayList board, ArrayList oppTerr, ArrayList myTerr)
         {
             foreach (TerritoryPosition posToConsider in avail)
             {
-                var winSetsWithPos = from ArrayList list in winDef
+                var winSetsWithPos = from ArrayList list in WinSetDefinitions
                                      where list.Contains(posToConsider)
                                      select list;
 
@@ -177,11 +198,11 @@ namespace TicTacToe
                         {
                             continue;
                         }
-                        else if (opp.ownedTerritories.Contains(pos))
+                        else if (oppTerr.Contains(pos))
                         {
                             ownedCount--;
                         }
-                        else if (parent.ownedTerritories.Contains(pos))
+                        else if (myTerr.Contains(pos))
                         {
                             ownedCount++;
                         }
@@ -199,7 +220,7 @@ namespace TicTacToe
 
         public override String ToString()
         {
-            return "Smart TicTacToeAgent";
+            return "Smart T3Agent";
         }
     }
 }
