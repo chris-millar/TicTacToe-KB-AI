@@ -9,15 +9,25 @@ namespace TicTacToe
 {
     public class SmartT3Agent : Agent
     {
-          
+        ArrayList MySingleWS;
+        ArrayList OpponentSingleWS;
+        ArrayList MyDoubleWS;
+        ArrayList OpponentDoubleWS;  
+
+
         public SmartT3Agent()
         {
             MyTerritories = new ArrayList();
             OpponentTerritories = new ArrayList();
             AvailTerritories = new ArrayList();
+
+            MySingleWS = new ArrayList();
+            OpponentSingleWS = new ArrayList();
+            MyDoubleWS = new ArrayList();
+            OpponentDoubleWS = new ArrayList();
         }
 
-        public override TerritoryPosition decideNextMove()
+        public TerritoryPosition ORIGdecideNextMove()
         {
             TerritoryPosition pick;
             String message;
@@ -232,5 +242,197 @@ namespace TicTacToe
         {
             return "Smart T3Agent";
         }
+
+
+        public override TerritoryPosition decideNextMove()
+        {
+            bool useOrig = true;
+
+            if (useOrig)
+            {
+                return ORIGdecideNextMove();
+            }
+            else
+            {
+                PreDecisionUpdateTrackedSets();
+                TerritoryPosition pick = NEWdecideNextMove();
+                PostDecisionUpdateTracedSets(pick);
+                return pick;
+            }
+        }
+
+        public TerritoryPosition NEWdecideNextMove()
+        {
+            TerritoryPosition pick;
+            Random rand = new Random();
+
+            if (MyTerritories.Count == 0)
+            {
+                pick = (TerritoryPosition)AvailTerritories[rand.Next(0, AvailTerritories.Count)];
+            }
+
+            pick = canWin_lookAtSets();
+            if (pick != TerritoryPosition.NULL)
+            {
+                MyTerritories.Add(pick);
+                return pick;
+            }
+
+            pick = canBlock_lookAtSets();
+            if (pick != TerritoryPosition.NULL)
+            {
+                MyTerritories.Add(pick);
+                return pick;
+            }
+
+            pick = canSetUpNextTurnWin_lookAtSets();
+            if (pick != TerritoryPosition.NULL)
+            {
+                MyTerritories.Add(pick);
+                return pick;
+            }
+
+            pick = (TerritoryPosition)AvailTerritories[rand.Next(0, AvailTerritories.Count)];
+            MyTerritories.Add(pick);
+            return pick;
+        }
+
+        private TerritoryPosition canWin_lookAtSets()
+        {
+            if (MyDoubleWS.Count != 0)
+            {
+                WinSet winningSet = (WinSet)MyDoubleWS[0];
+                foreach (TerritoryPosition pos in winningSet.list)
+                {
+                    if (!MyTerritories.Contains(pos))
+                        return pos;
+                }
+            }
+
+            return TerritoryPosition.NULL;
+        }
+
+        private TerritoryPosition canBlock_lookAtSets()
+        {
+            if (OpponentDoubleWS.Count != 0)
+            {
+                WinSet blockingSet = (WinSet)OpponentDoubleWS[0];
+                foreach (TerritoryPosition pos in blockingSet.list)
+                {
+                    if (!OpponentTerritories.Contains(pos))
+                        return pos;
+                }
+            }
+
+            return TerritoryPosition.NULL;
+        }
+
+        private TerritoryPosition canSetUpNextTurnWin_lookAtSets()
+        {
+            if (MySingleWS.Count != 0)
+            {
+                WinSet potentialSet = (WinSet)MySingleWS[0];
+                foreach (TerritoryPosition pos in potentialSet.list)
+                {
+                    if (!MyTerritories.Contains(pos))
+                        return pos;
+                }
+            }
+
+            return TerritoryPosition.NULL;
+        }
+
+        public void PreDecisionUpdateTrackedSets()
+        {
+            if (OpponentTerritories.Count == 0)
+                return;
+
+            foreach (WinSet set in WinSetPosBelongsTo(OppLastMove()))
+            {
+                bool removed = removeSetFromMineAndReport(set);
+                if (!removed)
+                {
+                    trackOppSet(set);
+                }
+            }
+        }
+
+        public void PostDecisionUpdateTracedSets(TerritoryPosition pick)
+        {
+            foreach (WinSet set in WinSetPosBelongsTo(pick))
+            {
+                bool removed = removeSetFromOppAndReport(set);
+                if (!removed)
+                {
+                    trackMySet(set);
+                }
+            }
+        }
+
+        private void trackOppSet(WinSet set)
+        {
+            if (OpponentSingleWS.Contains(set))
+            {
+                OpponentSingleWS.Remove(set);
+                OpponentDoubleWS.Add(set);
+            }
+            else
+            {
+                OpponentSingleWS.Add(set);
+            }
+        }
+
+        private void trackMySet(WinSet set)
+        {
+            if (MySingleWS.Contains(set))
+            {
+                MySingleWS.Remove(set);
+                MyDoubleWS.Add(set);
+            }
+            else
+            {
+                MySingleWS.Add(set);
+            }
+        }
+
+        private bool removeSetFromMineAndReport(WinSet set)
+        {
+            bool removed = MySingleWS.Contains(set) || MyDoubleWS.Contains(set);
+            if (removed)
+            {
+                MySingleWS.Remove(set);
+                MyDoubleWS.Remove(set);
+            }
+            return removed;
+        }
+
+        private bool removeSetFromOppAndReport(WinSet set)
+        {
+            bool removed = OpponentSingleWS.Contains(set) || OpponentDoubleWS.Contains(set);
+            if (removed)
+            {
+                OpponentSingleWS.Remove(set);
+                OpponentDoubleWS.Remove(set);
+            }
+            return removed;
+        }
+
+        public System.Collections.Generic.IEnumerable<WinSet> WinSetPosBelongsTo(TerritoryPosition pos)
+        {
+            //ArrayList setsPosBelongsTo = new ArrayList();
+            var winSetsWithPos = from WinSet set in WinSetDefinitions
+                                 where set.list.Contains(pos)
+                                 select set;
+
+            return winSetsWithPos;
+        }
+
+        private TerritoryPosition OppLastMove()
+        {
+            return (TerritoryPosition) OpponentTerritories[OpponentTerritories.Count - 1];
+        }
+
+
+
     }
 }
