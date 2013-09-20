@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExplicitDomainKnowledge\WinSet.cs" />
     <Compile Include="Game Logic\GameVocabEnum.cs" />
     <Compile Include="Knowledge Agents\Agent.cs" />
     <Compile Include="AppManager.cs" />
@@ -64,8 +65,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Knowledge Agents\SmartT3Agent.cs" />
-    <Compile Include="Expl Dom Knowledge\Territory.cs" />
-    <Compile Include="Expl Dom Knowledge\TerritoryPosition.cs" />
+    <Compile Include="ExplicitDomainKnowledge\Territory.cs" />
+    <Compile Include="ExplicitDomainKnowledge\TerritoryPosition.cs" />
     <Compile Include="Game Logic\TicTacToeGame.cs" />
     <EmbeddedResource Include="UI\MainUI.resx">
       <DependentUpon>MainUI.cs</DependentUpon>

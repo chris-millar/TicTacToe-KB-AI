@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using TicTacToe.ExplicitDomainKnowledge;
 
 namespace TicTacToe
 {
@@ -53,7 +54,7 @@ namespace TicTacToe
             playerTwo.NewInfo += new EventHandler(playerTwo_NewInfo);
 
             initBoard();
-            initWinConditions();
+            initWinSetDefinitions();
 
             //turn();
         }
@@ -113,7 +114,6 @@ namespace TicTacToe
 
             if (isGameOver())
             {
-                //halt the game somehow
                 String gameoverMessage;
 
                 if (didPlayerWin())
@@ -172,10 +172,10 @@ namespace TicTacToe
 
         private bool didPlayerWin()
         {
-            foreach (ArrayList list in winSetDefinitions)
+            foreach (WinSet set in winSetDefinitions)
             {
                 int ownCount = 0;
-                foreach (TerritoryPosition pos in list)
+                foreach (TerritoryPosition pos in set.list)
                 {
                     if (currTurnPlayer.doOwnTerrPosition(pos))
                     {
@@ -196,6 +196,7 @@ namespace TicTacToe
             return (availList.Count == 0);
         }
 
+        /*
         private void initWinConditions()
         {
             ArrayList winSet0 = new ArrayList { TerritoryPosition.NW, TerritoryPosition.N, TerritoryPosition.NE };
@@ -208,6 +209,32 @@ namespace TicTacToe
 
             ArrayList winSet6 = new ArrayList { TerritoryPosition.NW, TerritoryPosition.M, TerritoryPosition.SE };
             ArrayList winSet7 = new ArrayList { TerritoryPosition.NE, TerritoryPosition.M, TerritoryPosition.SW };
+
+            winSetDefinitions = new ArrayList();
+
+            winSetDefinitions.Add(winSet0);
+            winSetDefinitions.Add(winSet1);
+            winSetDefinitions.Add(winSet2);
+            winSetDefinitions.Add(winSet3);
+            winSetDefinitions.Add(winSet4);
+            winSetDefinitions.Add(winSet5);
+            winSetDefinitions.Add(winSet6);
+            winSetDefinitions.Add(winSet7);
+        }
+         */
+
+        private void initWinSetDefinitions()
+        {
+            WinSet winSet0 = new WinSet(TerritoryPosition.NW, TerritoryPosition.N, TerritoryPosition.NE);
+            WinSet winSet1 = new WinSet(TerritoryPosition.W, TerritoryPosition.M, TerritoryPosition.E);
+            WinSet winSet2 = new WinSet(TerritoryPosition.SW, TerritoryPosition.S, TerritoryPosition.SE);
+
+            WinSet winSet3 = new WinSet(TerritoryPosition.NW, TerritoryPosition.W, TerritoryPosition.SW);
+            WinSet winSet4 = new WinSet(TerritoryPosition.N, TerritoryPosition.M, TerritoryPosition.S);
+            WinSet winSet5 = new WinSet(TerritoryPosition.NE, TerritoryPosition.E, TerritoryPosition.SE);
+
+            WinSet winSet6 = new WinSet(TerritoryPosition.NW, TerritoryPosition.M, TerritoryPosition.SE);
+            WinSet winSet7 = new WinSet(TerritoryPosition.NE, TerritoryPosition.M, TerritoryPosition.SW);
 
             winSetDefinitions = new ArrayList();
 

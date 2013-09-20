@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using TicTacToe.ExplicitDomainKnowledge;
 
 namespace TicTacToe
 {
@@ -112,13 +113,13 @@ namespace TicTacToe
 
             foreach (TerritoryPosition posToConsider in avail)
             {
-                foreach (ArrayList list in WinSetDefinitions)
+                foreach (WinSet set in WinSetDefinitions)
                 {
-                    winningSetDefn = list;
-                    if (list.Contains(posToConsider))
+                    winningSetDefn = set.list;
+                    if (set.list.Contains(posToConsider))
                     {
                         int ownCount = 0;
-                        foreach (TerritoryPosition pos in list)
+                        foreach (TerritoryPosition pos in set.list)
                         {
                             if (myTerr.Contains(pos))
                             {
@@ -155,13 +156,13 @@ namespace TicTacToe
         {
             foreach (TerritoryPosition posToConsider in avail)
             {
-                var winSetsWithPos = from ArrayList list in WinSetDefinitions
-                                     where list.Contains(posToConsider)
-                                     select list;
+                var winSetsWithPos = from WinSet set in WinSetDefinitions
+                                     where set.list.Contains(posToConsider)
+                                     select set;
 
-                foreach (ArrayList list in winSetsWithPos)
+                foreach (WinSet set in winSetsWithPos)
                 {
-                    var otherTwoPositions = from TerritoryPosition position in list
+                    var otherTwoPositions = from TerritoryPosition position in set.list
                                             where oppTerr.Contains(position)
                                             select position;
 
@@ -185,14 +186,14 @@ namespace TicTacToe
         {
             foreach (TerritoryPosition posToConsider in avail)
             {
-                var winSetsWithPos = from ArrayList list in WinSetDefinitions
-                                     where list.Contains(posToConsider)
-                                     select list;
+                var winSetsWithPos = from WinSet set in WinSetDefinitions
+                                     where set.list.Contains(posToConsider)
+                                     select set;
 
-                foreach (ArrayList list in winSetsWithPos)
+                foreach (WinSet set in winSetsWithPos)
                 {
                     int ownedCount = 0;
-                    foreach (TerritoryPosition pos in list)
+                    foreach (TerritoryPosition pos in set.list)
                     {
                         if (pos == posToConsider)
                         {
