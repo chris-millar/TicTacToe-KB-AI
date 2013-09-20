@@ -9,6 +9,9 @@ namespace TicTacToe
 {
     public class TicTacToeGame
     {
+        public bool shouldDisplayUI;
+        public bool shouldDisplayConsole;
+
         Player playerOne;
         Player playerTwo;
         Player currTurnPlayer;
@@ -21,8 +24,6 @@ namespace TicTacToe
         ArrayList availList;
 
         ArrayList winSetDefinitions;
-
-        bool consoleMode;
 
 
         public event EventHandler TurnOver;
@@ -45,12 +46,15 @@ namespace TicTacToe
 
         public TicTacToeGame(Agent one, Agent two)
         {
-            consoleMode = false;
+            shouldDisplayUI = true;
+            shouldDisplayConsole = false;
 
             playerOne = new Player("Player 1", "X", one);
+            playerOne.UpdateDisplayOptions(shouldDisplayConsole, shouldDisplayUI);
             playerOne.NewInfo += new EventHandler(playerOne_NewInfo);
 
             playerTwo = new Player("Player 2", "O", two);
+            playerTwo.UpdateDisplayOptions(shouldDisplayConsole, shouldDisplayUI);
             playerTwo.NewInfo += new EventHandler(playerTwo_NewInfo);
 
             initBoard();
@@ -100,13 +104,14 @@ namespace TicTacToe
         public void turn()
         {
             String turnMessage = String.Format("\nIt's {0}'s turn: \t [ {1} ]", currTurnPlayer.name, currTurnPlayer.getSymbol());
-            if (consoleMode)
+            if (shouldDisplayConsole)
                 Console.WriteLine(turnMessage);
-            else
+            if (shouldDisplayUI)
                 onNewInfo(turnMessage);
 
             //Decide move & make it
-            claimTerritory(currTurnPlayer.makeMove(availList, otherPlayer.ownedTerritories, boardList));
+            TerritoryPosition pick = currTurnPlayer.makeMove(availList, otherPlayer.MyTerritories, boardList);
+            claimTerritory(pick);
 
             printBoard();
 
@@ -122,11 +127,11 @@ namespace TicTacToe
                     gameoverMessage = String.Format("\nGAME OVER: Draw! Neither player won.");
 
 
-                if (consoleMode)
+                if (shouldDisplayConsole)
                 {
                     Console.WriteLine(gameoverMessage);
                 }
-                else
+                if (shouldDisplayUI)
                 {
                     onNewInfo(gameoverMessage);
                 }
@@ -225,16 +230,16 @@ namespace TicTacToe
 
         private void initWinSetDefinitions()
         {
-            WinSet winSet0 = new WinSet(TerritoryPosition.NW, TerritoryPosition.N, TerritoryPosition.NE);
-            WinSet winSet1 = new WinSet(TerritoryPosition.W, TerritoryPosition.M, TerritoryPosition.E);
-            WinSet winSet2 = new WinSet(TerritoryPosition.SW, TerritoryPosition.S, TerritoryPosition.SE);
+            WinSet winSet0 = new WinSet(TerritoryPosition.NW, TerritoryPosition.N, TerritoryPosition.NE, WinSetEnum.RowTop);
+            WinSet winSet1 = new WinSet(TerritoryPosition.W, TerritoryPosition.M, TerritoryPosition.E, WinSetEnum.RowMiddle);
+            WinSet winSet2 = new WinSet(TerritoryPosition.SW, TerritoryPosition.S, TerritoryPosition.SE, WinSetEnum.RowBottom);
 
-            WinSet winSet3 = new WinSet(TerritoryPosition.NW, TerritoryPosition.W, TerritoryPosition.SW);
-            WinSet winSet4 = new WinSet(TerritoryPosition.N, TerritoryPosition.M, TerritoryPosition.S);
-            WinSet winSet5 = new WinSet(TerritoryPosition.NE, TerritoryPosition.E, TerritoryPosition.SE);
+            WinSet winSet3 = new WinSet(TerritoryPosition.NW, TerritoryPosition.W, TerritoryPosition.SW, WinSetEnum.ColLeft);
+            WinSet winSet4 = new WinSet(TerritoryPosition.N, TerritoryPosition.M, TerritoryPosition.S, WinSetEnum.ColMiddle);
+            WinSet winSet5 = new WinSet(TerritoryPosition.NE, TerritoryPosition.E, TerritoryPosition.SE, WinSetEnum.ColRight);
 
-            WinSet winSet6 = new WinSet(TerritoryPosition.NW, TerritoryPosition.M, TerritoryPosition.SE);
-            WinSet winSet7 = new WinSet(TerritoryPosition.NE, TerritoryPosition.M, TerritoryPosition.SW);
+            WinSet winSet6 = new WinSet(TerritoryPosition.NW, TerritoryPosition.M, TerritoryPosition.SE, WinSetEnum.DiagNeg);
+            WinSet winSet7 = new WinSet(TerritoryPosition.NE, TerritoryPosition.M, TerritoryPosition.SW, WinSetEnum.DiagPos);
 
             winSetDefinitions = new ArrayList();
 
@@ -260,19 +265,25 @@ namespace TicTacToe
             String line2 = String.Format("\n{0}  |  {1}  |  {2}", board[3].symbol, board[4].symbol, board[5].symbol);
             String line3 = String.Format("\n{0}  |  {1}  |  {2}", board[6].symbol, board[7].symbol, board[8].symbol);
 
-            if (consoleMode)
+            if (shouldDisplayConsole)
             {
                 Console.WriteLine(line1);
                 Console.WriteLine(line2);
                 Console.WriteLine(line3);
             }
-            else
+            if (shouldDisplayUI)
             {
                 onNewInfo(line1);
                 onNewInfo(line2);
                 onNewInfo(line3);
             }
 
+        }
+
+        public void UpdateOutputOptions(bool console, bool ui)
+        {
+            shouldDisplayConsole = console;
+            shouldDisplayUI = ui;
         }
 
         public bool canStartNewGame()

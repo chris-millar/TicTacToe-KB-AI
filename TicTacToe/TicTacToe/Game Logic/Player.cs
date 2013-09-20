@@ -11,7 +11,16 @@ namespace TicTacToe
         public String name;
         public String symbol;
         private Agent agent;
-        public ArrayList ownedTerritories;
+
+        public ArrayList MyTerritories
+        {
+            get { return agent.MyTerritories; }
+
+            set { agent.MyTerritories = value; }
+        }
+
+        public bool shouldDisplayConsole;
+        public bool shouldDisplayUI;
 
         public event EventHandler NewInfo;
         private void onNewInfo(String message)
@@ -30,8 +39,6 @@ namespace TicTacToe
             agent.NewInfo += new EventHandler(agent_NewInfo);
 
             agent.setParent(this);
-
-            ownedTerritories = new ArrayList();
         }
 
         void agent_NewInfo(object sender, EventArgs e)
@@ -40,12 +47,11 @@ namespace TicTacToe
             onNewInfo(message);
         }
 
-        public TerritoryPosition makeMove(ArrayList availTerritories, ArrayList ownedByOtherPlayer, ArrayList board)
+        public TerritoryPosition makeMove(ArrayList availTerritories, ArrayList opponentsTerritories, ArrayList board)
         {
-            //Console.Write(String.Format("Turn: {0}", name));
-            TerritoryPosition claimed = agent.decideNextMove(availTerritories, ownedByOtherPlayer, ownedTerritories, board);
-            ownedTerritories.Add(claimed);
-            return claimed;
+            agent.UpdateMemAboutCurrGameState(availTerritories, opponentsTerritories);
+            TerritoryPosition pick = agent.decideNextMove();
+            return pick;
         }
 
         public void setWinSetDefinitions(ArrayList definitions)
@@ -60,7 +66,13 @@ namespace TicTacToe
 
         public bool doOwnTerrPosition(TerritoryPosition pos)
         {
-            return ownedTerritories.Contains(pos);
+            return MyTerritories.Contains(pos);
+        }
+
+        public void UpdateDisplayOptions(bool console, bool ui)
+        {
+            shouldDisplayConsole = console;
+            shouldDisplayUI = ui;
         }
         
 

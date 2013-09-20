@@ -45,6 +45,7 @@ namespace TicTacToe
                 }
 
                 _game = new TicTacToeGame(playerOneAgent, playerTwoAgent);
+                //_game.UpdateOutputOptions(true, true);
                 _game.NewInfo += new EventHandler(game_NewInfo);
 
                 ui.ResetFauxConsole();

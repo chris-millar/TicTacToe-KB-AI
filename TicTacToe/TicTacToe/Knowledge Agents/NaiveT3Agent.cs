@@ -9,29 +9,32 @@ namespace TicTacToe
     public class NaiveT3Agent : Agent
     {
         Random rand;
-        bool consoleMode;
 
         public NaiveT3Agent()
         {
             rand = new Random();
-            consoleMode = false;
+
+            MyTerritories = new ArrayList();
+            OpponentTerritories = new ArrayList();
+            AvailTerritories = new ArrayList();
         }
 
-        public override TerritoryPosition decideNextMove(ArrayList avail, ArrayList oppTerr, ArrayList myTerr, ArrayList board)
+        public override TerritoryPosition decideNextMove()
         {
-            int index = rand.Next(0, avail.Count);
-            TerritoryPosition pick = (TerritoryPosition) avail[index];
+            int index = rand.Next(0, AvailTerritories.Count);
+            TerritoryPosition pick = (TerritoryPosition) AvailTerritories[index];
 
             String message = " - Naive Agent: \t Random Pick";
-            if (consoleMode)
+            if (parent.shouldDisplayConsole)
             {
                 Console.WriteLine(message);
             }
-            else
+            if (parent.shouldDisplayUI)
             {
                 onNewInfo(message);
             }
 
+            MyTerritories.Add(pick);
             return pick;
         }
 

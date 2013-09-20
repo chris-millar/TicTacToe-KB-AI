@@ -14,10 +14,11 @@ namespace TicTacToe
         public ArrayList WinSetDefinitions;
 
         public ArrayList AvailTerritories;
-        public ArrayList OpponentOwnedTerritories;
-        public ArrayList myOwnedTerritories;
+        public ArrayList OpponentTerritories;
+        public ArrayList MyTerritories;
 
-        public abstract TerritoryPosition decideNextMove(ArrayList avail, ArrayList thierTerr, ArrayList myTerr, ArrayList board);
+
+        public abstract TerritoryPosition decideNextMove();
 
         public void setParent(Player parent)
         {
@@ -27,6 +28,12 @@ namespace TicTacToe
         public void setWinSetDefinitions(ArrayList definitions)
         {
             WinSetDefinitions = definitions;
+        }
+
+        public void UpdateMemAboutCurrGameState(ArrayList availTerritories, ArrayList opponentsTerritories)
+        {
+            AvailTerritories = availTerritories;
+            OpponentTerritories = opponentsTerritories;
         }
 
         protected void onNewInfo(String message)
