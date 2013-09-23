@@ -13,7 +13,7 @@ namespace TicTacToe
         public NaiveT3Agent()
         {
             rand = new Random();
-
+            myAgentType = AgentTypes.Naive;
             resetForNewGame();
         }
 

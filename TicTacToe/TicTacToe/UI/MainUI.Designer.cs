@@ -34,6 +34,9 @@
             this.player2_comboBox = new System.Windows.Forms.ComboBox();
             this.start_button = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.HundredGames_RadioButton = new System.Windows.Forms.RadioButton();
+            this.TenGames_RadioButton = new System.Windows.Forms.RadioButton();
+            this.OneGame_RadioButton = new System.Windows.Forms.RadioButton();
             this.shapeContainer1 = new Microsoft.VisualBasic.PowerPacks.ShapeContainer();
             this.lineShape1 = new Microsoft.VisualBasic.PowerPacks.LineShape();
             this.fakeConsole_textBox = new System.Windows.Forms.TextBox();
@@ -99,6 +102,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.HundredGames_RadioButton);
+            this.groupBox1.Controls.Add(this.TenGames_RadioButton);
+            this.groupBox1.Controls.Add(this.OneGame_RadioButton);
             this.groupBox1.Controls.Add(this.start_button);
             this.groupBox1.Controls.Add(this.player2_comboBox);
             this.groupBox1.Controls.Add(this.player2_label);
@@ -110,6 +116,42 @@
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Game Play Options";
+            // 
+            // HundredGames_RadioButton
+            // 
+            this.HundredGames_RadioButton.AutoSize = true;
+            this.HundredGames_RadioButton.Location = new System.Drawing.Point(183, 97);
+            this.HundredGames_RadioButton.Name = "HundredGames_RadioButton";
+            this.HundredGames_RadioButton.Size = new System.Drawing.Size(79, 17);
+            this.HundredGames_RadioButton.TabIndex = 8;
+            this.HundredGames_RadioButton.TabStop = true;
+            this.HundredGames_RadioButton.Text = "100 Games";
+            this.HundredGames_RadioButton.UseVisualStyleBackColor = true;
+            this.HundredGames_RadioButton.CheckedChanged += new System.EventHandler(this.HundredGames_RadioButton_CheckedChanged);
+            // 
+            // TenGames_RadioButton
+            // 
+            this.TenGames_RadioButton.AutoSize = true;
+            this.TenGames_RadioButton.Location = new System.Drawing.Point(104, 97);
+            this.TenGames_RadioButton.Name = "TenGames_RadioButton";
+            this.TenGames_RadioButton.Size = new System.Drawing.Size(73, 17);
+            this.TenGames_RadioButton.TabIndex = 7;
+            this.TenGames_RadioButton.TabStop = true;
+            this.TenGames_RadioButton.Text = "10 Games";
+            this.TenGames_RadioButton.UseVisualStyleBackColor = true;
+            this.TenGames_RadioButton.CheckedChanged += new System.EventHandler(this.TenGames_RadioButton_CheckedChanged);
+            // 
+            // OneGame_RadioButton
+            // 
+            this.OneGame_RadioButton.AutoSize = true;
+            this.OneGame_RadioButton.Location = new System.Drawing.Point(36, 97);
+            this.OneGame_RadioButton.Name = "OneGame_RadioButton";
+            this.OneGame_RadioButton.Size = new System.Drawing.Size(62, 17);
+            this.OneGame_RadioButton.TabIndex = 6;
+            this.OneGame_RadioButton.TabStop = true;
+            this.OneGame_RadioButton.Text = "1 Game";
+            this.OneGame_RadioButton.UseVisualStyleBackColor = true;
+            this.OneGame_RadioButton.CheckedChanged += new System.EventHandler(this.OneGame_RadioButton_CheckedChanged);
             // 
             // shapeContainer1
             // 
@@ -168,6 +210,9 @@
         private Microsoft.VisualBasic.PowerPacks.ShapeContainer shapeContainer1;
         private Microsoft.VisualBasic.PowerPacks.LineShape lineShape1;
         private System.Windows.Forms.TextBox fakeConsole_textBox;
+        private System.Windows.Forms.RadioButton HundredGames_RadioButton;
+        private System.Windows.Forms.RadioButton TenGames_RadioButton;
+        private System.Windows.Forms.RadioButton OneGame_RadioButton;
     }
 }
 

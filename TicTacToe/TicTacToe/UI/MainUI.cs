@@ -44,6 +44,15 @@ namespace TicTacToe
             }
         }
 
+        public event EventHandler RadioButtonPressed;
+        private void onRadioButtonPressed(int numGamesToPlay)
+        {
+            if (RadioButtonPressed != null)
+            {
+                RadioButtonPressed(numGamesToPlay, new EventArgs());
+            }
+        }
+
         public MainUI()
         {
             InitializeComponent();
@@ -92,6 +101,21 @@ namespace TicTacToe
                 box.AppendText(Environment.NewLine);
             }
             box.AppendText(str);
+        }
+
+        private void OneGame_RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            onRadioButtonPressed(1);
+        }
+
+        private void TenGames_RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            onRadioButtonPressed(10);
+        }
+
+        private void HundredGames_RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            onRadioButtonPressed(100);
         }
     }
 }

@@ -17,6 +17,8 @@ namespace TicTacToe
         public ArrayList OpponentTerritories;
         public ArrayList MyTerritories;
 
+        public AgentType myAgentType;
+
 
         public abstract TerritoryPosition decideNextMove();
 

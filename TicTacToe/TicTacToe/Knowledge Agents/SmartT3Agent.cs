@@ -17,6 +17,7 @@ namespace TicTacToe
 
         public SmartT3Agent()
         {
+            myAgentType = AgentTypes.Smart;
             resetForNewGame();
         }
 

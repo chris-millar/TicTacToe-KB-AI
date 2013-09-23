@@ -12,16 +12,19 @@ namespace TicTacToe
         public bool shouldDisplayUI;
         public bool shouldDisplayConsole;
 
-        Player playerOne;
-        Player playerTwo;
-        Player currTurnPlayer;
-        Player otherPlayer;
+        public Player playerOne;
+        public Player playerTwo;
+        public Player currTurnPlayer;
+        public Player otherPlayer;
+
+        public GameOverState gameOverState;
+        public bool showTurn;
 
         public Territory[] board;
         Territory[] availPositions;
 
         ArrayList boardList;
-        ArrayList availList;
+        public ArrayList availList;
 
         ArrayList winSetDefinitions;
 
@@ -32,6 +35,15 @@ namespace TicTacToe
             if (TurnOver != null)
             {
                 TurnOver(this, new EventArgs());
+            }
+        }
+
+        public event EventHandler GameOver;
+        private void onGameOver()
+        {
+            if (GameOver != null)
+            {
+                GameOver(this, new EventArgs());
             }
         }
 
@@ -66,6 +78,8 @@ namespace TicTacToe
 
         public void start()
         {
+            gameOverState = GameOverState.NULL;
+
             giveAgentsStaticDomainKnowledge();
 
             currTurnPlayer = playerOne;
@@ -135,6 +149,8 @@ namespace TicTacToe
                 {
                     onNewInfo(gameoverMessage);
                 }
+
+                onGameOver();
             }
             else
             {
@@ -149,7 +165,8 @@ namespace TicTacToe
                     otherPlayer = playerTwo;
                 }
 
-                System.Threading.Thread.Sleep(TimeSpan.FromSeconds(2));
+                if (showTurn)
+                    System.Threading.Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 onTurnOver();
 
@@ -168,9 +185,15 @@ namespace TicTacToe
         private bool isGameOver()
         {
             if (didPlayerWin())
+            {
+                gameOverState = GameOverState.Win;
                 return true;
+            }
             else if (noMoreSpacesAvail())
+            {
+                gameOverState = GameOverState.Tie;
                 return true;
+            }
             else
                 return false;
         }
