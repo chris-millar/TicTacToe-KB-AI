@@ -290,6 +290,13 @@ namespace TicTacToe
         {
             return true;
         }
+
+        public void resetGame()
+        {
+            initBoard();
+            playerOne.resetForNewGame();
+            playerTwo.resetForNewGame();
+        }
         
         void playerOne_NewInfo(object sender, EventArgs e)
         {

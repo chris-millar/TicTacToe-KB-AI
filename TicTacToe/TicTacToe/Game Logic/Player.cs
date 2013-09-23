@@ -74,6 +74,11 @@ namespace TicTacToe
             shouldDisplayConsole = console;
             shouldDisplayUI = ui;
         }
+
+        public void resetForNewGame()
+        {
+            agent.resetForNewGame();
+        }
         
 
     }

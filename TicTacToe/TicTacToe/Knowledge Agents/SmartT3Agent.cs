@@ -17,6 +17,11 @@ namespace TicTacToe
 
         public SmartT3Agent()
         {
+            resetForNewGame();
+        }
+
+        public override void resetForNewGame()
+        {
             MyTerritories = new ArrayList();
             OpponentTerritories = new ArrayList();
             AvailTerritories = new ArrayList();

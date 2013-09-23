@@ -41,14 +41,17 @@ namespace TicTacToe
             {
                 if (_game != null)
                 {
-                    UnhookEventListener();
+                    //UnhookEventListener();
+                    _game.resetGame();
+                    ui.ResetFauxConsole();
                 }
-
-                _game = new TicTacToeGame(playerOneAgent, playerTwoAgent);
-                //_game.UpdateOutputOptions(true, true);
-                _game.NewInfo += new EventHandler(game_NewInfo);
-
-                ui.ResetFauxConsole();
+                else
+                {
+                    _game = new TicTacToeGame(playerOneAgent, playerTwoAgent);
+                    //_game.UpdateOutputOptions(true, true);
+                    _game.NewInfo += new EventHandler(game_NewInfo);
+                    ui.ResetFauxConsole();
+                }
 
                 _game.start();
             }

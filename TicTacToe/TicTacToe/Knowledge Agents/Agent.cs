@@ -43,5 +43,12 @@ namespace TicTacToe
                 NewInfo(message, new EventArgs());
             }
         }
+
+        public virtual void resetForNewGame()
+        {
+            MyTerritories = new ArrayList();
+            OpponentTerritories = new ArrayList();
+            AvailTerritories = new ArrayList();
+        }
     }
 }

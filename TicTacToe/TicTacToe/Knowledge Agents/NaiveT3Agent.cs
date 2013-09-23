@@ -14,9 +14,7 @@ namespace TicTacToe
         {
             rand = new Random();
 
-            MyTerritories = new ArrayList();
-            OpponentTerritories = new ArrayList();
-            AvailTerritories = new ArrayList();
+            resetForNewGame();
         }
 
         public override TerritoryPosition decideNextMove()
