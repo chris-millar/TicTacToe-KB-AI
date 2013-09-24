@@ -118,7 +118,7 @@ namespace TicTacToe
 
         public void turn()
         {
-            TurnFrame frame = new TurnFrame(TurnNumber, currTurnPlayer);
+            TurnFrame frame = new TurnFrame(TurnNumber, currTurnPlayer, winSetDefinitions);
             frame.Opponent = otherPlayer;
             frame.setMyTerritories(currTurnPlayer.MyTerritories);
             frame.setOpponentsTerritories(otherPlayer.MyTerritories);

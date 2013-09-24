@@ -73,6 +73,17 @@ namespace TicTacToe
             }
         }
 
+        public event EventHandler CyclePerceptButtonPressed;
+        private void onCyclePerceptButtonPressed(int value)
+        {
+            if (CyclePerceptButtonPressed != null)
+            {
+                CyclePerceptButtonPressed(value, new EventArgs());
+            }
+        }
+
+        public int cyclePerceptSize;
+        public int cyclePerceptValue;
 
         // COLOR DEFINITIONS //
         Color OwnColor = Color.LawnGreen;
@@ -80,6 +91,7 @@ namespace TicTacToe
         Color AvailColor = Color.Plum;
         Color ClaimedTerritoryColor = Color.DarkRed;
         Color PickTerritoryColor = Color.DeepSkyBlue;
+        Color WinSetColor = Color.Goldenrod;
 
 
         public MainUI()
@@ -179,7 +191,7 @@ namespace TicTacToe
         {
             UpdateTurnIdFields(frame);
             UpdateActualGameBoard(frame);
-            UpdateAgentPercepts(frame, AgentPercepts.MyTerr, true);
+            UpdateAgentPercepts(frame, AgentPercepts.MyTerr, true, true);
             UpdateReasoningFields(frame);
         }
 
@@ -197,11 +209,13 @@ namespace TicTacToe
             snapInView(gameBoard, ActualGameBoard_Panel);
         }
 
-        public void UpdateAgentPercepts(TurnFrame frame, AgentPercepts perceptChoice, bool shouldUpdateMenu)
+        public void UpdateAgentPercepts(TurnFrame frame, AgentPercepts perceptChoice, bool shouldUpdateMenu, bool shouldResetCycle)
         {
             if (shouldUpdateMenu)
+            {
                 UpdatePerceptsMenu(frame);
-            T3Board perceptBoard = BuildPerceptBoard(frame, perceptChoice);
+            }
+            T3Board perceptBoard = BuildPerceptBoard(frame, perceptChoice, shouldResetCycle);
             snapInView(perceptBoard, AgentsPerception_Panel);
         }
 
@@ -233,12 +247,14 @@ namespace TicTacToe
             return board;
         }
 
-        private T3Board BuildPerceptBoard(TurnFrame frame, AgentPercepts percept)
+        private T3Board BuildPerceptBoard(TurnFrame frame, AgentPercepts percept, bool canResetCycle)
         {
             T3Board board = new T3Board();
 
             if (percept == AgentPercepts.MyTerr)
             {
+                CyclePercept_Button.Visible = false;
+
                 for (int i = 0; i < frame.MyTerritories.Count; i++)
                 {
                     int index = (int)frame.MyTerritories[i];
@@ -248,6 +264,8 @@ namespace TicTacToe
             }
             else if (percept == AgentPercepts.OppTerr)
             {
+                CyclePercept_Button.Visible = false;
+
                 for (int i = 0; i < frame.OpponentsTerritories.Count; i++)
                 {
                     int index = (int)frame.OpponentsTerritories[i];
@@ -257,6 +275,8 @@ namespace TicTacToe
             }
             else if (percept == AgentPercepts.AvailTerr)
             {
+                CyclePercept_Button.Visible = false;
+
                 for (int i = 0; i < frame.Avail.Count; i++)
                 {
                     int index = (int)frame.Avail[i];
@@ -266,7 +286,25 @@ namespace TicTacToe
             }
             else if (percept == AgentPercepts.WinSets)
             {
+                if (canResetCycle) //magicCount == 0)
+                {
+                    //magicCount++;
+                    CyclePercept_Button.Visible = true;
+                    cyclePerceptSize = 8;
+                    cyclePerceptValue = 0;
+                }
 
+                WinSet set = (WinSet)frame.WinSetDefinitions[cyclePerceptValue];
+
+                for (int i = 0; i < 3; i++)
+                {
+                    int index = (int)set.list[i];
+                    ((Button)board.BoardButtons[index]).Text = "";
+                    ((Button)board.BoardButtons[index]).BackColor = WinSetColor;
+                }
+
+                //Console.WriteLine(String.Format("val: {0}",cyclePerceptValue));
+                //Console.WriteLine(String.Format("max: {0}\n", cyclePerceptSize));
             }
             else if (percept == AgentPercepts.FirstTurn)
             {
@@ -278,6 +316,8 @@ namespace TicTacToe
             }
             else if (percept == AgentPercepts.CanWin)
             {
+                CyclePercept_Button.Visible = false;
+
                 for (int i = 0; i < frame.WinSetImInterestedIn.Count; i++)
                 {
                     int index = (int)frame.WinSetImInterestedIn[i];
@@ -296,6 +336,8 @@ namespace TicTacToe
             }
             else if (percept == AgentPercepts.CanBlock)
             {
+                CyclePercept_Button.Visible = false;
+
                 for (int i = 0; i < frame.WinSetImInterestedIn.Count; i++)
                 {
                     int index = (int)frame.WinSetImInterestedIn[i];
@@ -314,6 +356,8 @@ namespace TicTacToe
             }
             else if (percept == AgentPercepts.CanSetUpNextTurnWin)
             {
+                CyclePercept_Button.Visible = false;
+
                 for (int i = 0; i < frame.WinSetImInterestedIn.Count; i++)
                 {
                     int index = (int)frame.WinSetImInterestedIn[i];
@@ -338,22 +382,61 @@ namespace TicTacToe
             }
             else if (percept == AgentPercepts.NoGoodMove)
             {
+                CyclePercept_Button.Visible = false;
             }
             else if (percept == AgentPercepts.MyPPWS)
             {
+                if (canResetCycle)
+                {
+                    CyclePercept_Button.Visible = true;
+                    if (frame.MyPPWS != null && frame.MyPPWS.Count > 0)
+                    {
+                        cyclePerceptSize = frame.MyPPWS.Count;
+                        cyclePerceptValue = 0;
+                    }
+                }
             }
             else if (percept == AgentPercepts.MyPWS)
             {
+                if (canResetCycle)
+                {
+                    CyclePercept_Button.Visible = true;
+                    if (frame.MyPWS != null && frame.MyPWS.Count > 0)
+                    {
+                        cyclePerceptSize = frame.MyPWS.Count;
+                        cyclePerceptValue = 0;
+                    }
+                }
             }
             else if (percept == AgentPercepts.OppPPWS)
             {
+                if (canResetCycle)
+                {
+                    CyclePercept_Button.Visible = true;
+                    if (frame.OppPPWS != null && frame.OppPPWS.Count > 0)
+                    {
+                        cyclePerceptSize = frame.OppPPWS.Count;
+                        cyclePerceptValue = 0;
+                    }
+                }
             }
             else if (percept == AgentPercepts.OppPWs)
             {
+                if (canResetCycle)
+                {
+                    CyclePercept_Button.Visible = true;
+                    if (frame.OppPWS != null && frame.OppPWS.Count > 0)
+                    {
+                        cyclePerceptSize = frame.OppPWS.Count;
+                        cyclePerceptValue = 0;
+                    }
+                }
             }
 
             return board;
         }
+
+        public int magicCount = 0;
 
         private void UpdatePerceptsMenu(TurnFrame frame)
         {
@@ -414,6 +497,31 @@ namespace TicTacToe
                 onPerceptMenuItemSelected(item);
             }
         }
+
+        private void CyclePercept_Button_Click(object sender, EventArgs e)
+        {
+            cyclePerceptValue = StepCircularValue(cyclePerceptValue, cyclePerceptSize);
+            onCyclePerceptButtonPressed(cyclePerceptValue);
+        }
+
+        private int StepCircularValue(int val, int max)
+        {
+            if (max == 0)
+            {
+                return 0;
+            }
+
+            val++;
+            if (val == max)
+            {
+                return 0;
+            }
+            else
+            {
+                return val;
+            }
+        }
+
     }
 }
 

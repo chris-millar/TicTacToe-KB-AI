@@ -24,10 +24,18 @@ namespace TicTacToe
         public ArrayList WinSetImInterestedIn;
         public ArrayList WhyImInterestedInThisWinSet;
 
-        public TurnFrame(int turnNum, Player player)
+        public ArrayList MyPPWS;
+        public ArrayList MyPWS;
+        public ArrayList OppPPWS;
+        public ArrayList OppPWS;
+
+        public ArrayList WinSetDefinitions;
+
+        public TurnFrame(int turnNum, Player player, ArrayList winSetDefn)
         {
             this.TurnNumber = turnNum;
             this.player = player;
+            this.WinSetDefinitions = winSetDefn;
             ReasoningForHowMoveReasonDetermined = new ArrayList();
         }
 

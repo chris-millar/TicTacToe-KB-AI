@@ -91,7 +91,7 @@
             this.ClaimedPos_Label = new System.Windows.Forms.Label();
             this.Statistics_Panel = new System.Windows.Forms.Panel();
             this.GameStats_TextBox = new System.Windows.Forms.TextBox();
-            this.AgentPerceptSubChoice_ListView = new System.Windows.Forms.ListView();
+            this.CyclePercept_Button = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -296,7 +296,7 @@
             this.Percept_ListView.MultiSelect = false;
             this.Percept_ListView.Name = "Percept_ListView";
             this.Percept_ListView.Scrollable = false;
-            this.Percept_ListView.Size = new System.Drawing.Size(131, 143);
+            this.Percept_ListView.Size = new System.Drawing.Size(131, 202);
             this.Percept_ListView.TabIndex = 13;
             this.Percept_ListView.UseCompatibleStateImageBehavior = false;
             this.Percept_ListView.View = System.Windows.Forms.View.List;
@@ -531,27 +531,24 @@
             this.GameStats_TextBox.Size = new System.Drawing.Size(441, 137);
             this.GameStats_TextBox.TabIndex = 0;
             // 
-            // AgentPerceptSubChoice_ListView
+            // CyclePercept_Button
             // 
-            this.AgentPerceptSubChoice_ListView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AgentPerceptSubChoice_ListView.FullRowSelect = true;
-            this.AgentPerceptSubChoice_ListView.GridLines = true;
-            this.AgentPerceptSubChoice_ListView.LabelWrap = false;
-            this.AgentPerceptSubChoice_ListView.Location = new System.Drawing.Point(12, 404);
-            this.AgentPerceptSubChoice_ListView.MultiSelect = false;
-            this.AgentPerceptSubChoice_ListView.Name = "AgentPerceptSubChoice_ListView";
-            this.AgentPerceptSubChoice_ListView.Scrollable = false;
-            this.AgentPerceptSubChoice_ListView.Size = new System.Drawing.Size(131, 121);
-            this.AgentPerceptSubChoice_ListView.TabIndex = 18;
-            this.AgentPerceptSubChoice_ListView.UseCompatibleStateImageBehavior = false;
-            this.AgentPerceptSubChoice_ListView.View = System.Windows.Forms.View.List;
+            this.CyclePercept_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CyclePercept_Button.Location = new System.Drawing.Point(12, 463);
+            this.CyclePercept_Button.Name = "CyclePercept_Button";
+            this.CyclePercept_Button.Size = new System.Drawing.Size(131, 29);
+            this.CyclePercept_Button.TabIndex = 9;
+            this.CyclePercept_Button.Text = "Cycle Percept";
+            this.CyclePercept_Button.UseVisualStyleBackColor = true;
+            this.CyclePercept_Button.Visible = false;
+            this.CyclePercept_Button.Click += new System.EventHandler(this.CyclePercept_Button_Click);
             // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 530);
-            this.Controls.Add(this.AgentPerceptSubChoice_ListView);
+            this.Controls.Add(this.CyclePercept_Button);
             this.Controls.Add(this.Statistics_Panel);
             this.Controls.Add(this.Reasoning_Panel);
             this.Controls.Add(this.TurnID_Panel);
@@ -633,7 +630,7 @@
         System.Windows.Forms.ListViewItem MyPPWS_ListViewItem;
         System.Windows.Forms.ListViewItem MyPWS_ListViewItem;
         System.Windows.Forms.ListViewItem OppPWS_ListViewItem;
-        private System.Windows.Forms.ListView AgentPerceptSubChoice_ListView;
+        private System.Windows.Forms.Button CyclePercept_Button;
     }
 }
 

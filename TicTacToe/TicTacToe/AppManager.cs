@@ -21,6 +21,10 @@ namespace TicTacToe
 
         public ArrayList Frames;
         public TurnFrame CurrFrame;
+        public AgentPercepts CurrPercept;
+
+        public int cyclePerceptSize;
+        public int cyclePerceptValue;
 
         public AppManager()
         {
@@ -31,14 +35,22 @@ namespace TicTacToe
             ui.RadioButtonPressed += new EventHandler(ui_RadioButtonPressed);
             ui.TurnMenuItemSelected += new EventHandler(ui_TurnMenuItemSelected);
             ui.PerceptMenuItemSelected += new EventHandler(ui_PerceptMenuItemSelected);
+            ui.CyclePerceptButtonPressed += new EventHandler(ui_CyclePerceptButtonPressed);
             ui.InitSelections();
+        }
+
+        void ui_CyclePerceptButtonPressed(object sender, EventArgs e)
+        {
+            int value = (int)sender;
+            ui.UpdateAgentPercepts(CurrFrame, CurrPercept, false, false);
         }
 
         void ui_PerceptMenuItemSelected(object sender, EventArgs e)
         {
             ListViewItem item = sender as ListViewItem;
             AgentPercepts percept = (AgentPercepts)item.Tag;
-            ui.UpdateAgentPercepts(CurrFrame, percept, false);
+            CurrPercept = percept;
+            ui.UpdateAgentPercepts(CurrFrame, percept, false, true);
         }
 
         void ui_TurnMenuItemSelected(object sender, EventArgs e)
