@@ -91,6 +91,16 @@ namespace TicTacToe
             return agent.WhatWasReasoningForHowMoveReasonDetermined();
         }
 
+        public ArrayList WhatWinSetImInterestedIn()
+        {
+            return agent.WhatWinSetImInterestedIn();
+        }
+
+        public ArrayList WhyAmImInterestedInThisSet()
+        {
+            return agent.WhyAmImInterestedInThisSet();
+        }
+
         public AgentType getAgentType()
         {
             return agent.myAgentType;

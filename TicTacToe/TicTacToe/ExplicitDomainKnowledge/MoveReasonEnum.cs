@@ -16,7 +16,14 @@ namespace TicTacToe.ExplicitDomainKnowledge
         NULL
     }
 
-    public static class MoveReasonings
+    public enum TerritoryPositionState
+    {
+        Avail = 0,
+        Own,
+        OppOwn
+    }
+
+    public static class EnumToStringConverter
     {
         public static String ConvertReasoning(MoveReason reason)
         {
@@ -35,5 +42,19 @@ namespace TicTacToe.ExplicitDomainKnowledge
 
             return "NULL";
         }
+
+        public static String ConvertTerritoryPositionState(TerritoryPositionState state)
+        {
+            if (state == TerritoryPositionState.Avail)
+                return "Avail";
+            if (state == TerritoryPositionState.Own)
+                return "Own";
+            if (state == TerritoryPositionState.OppOwn)
+                return "Opp Owns";
+
+            return "NULL";
+        }
     }
+
+
 }

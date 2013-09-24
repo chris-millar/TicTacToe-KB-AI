@@ -28,30 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("My Territories");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Opp Territories");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Avail Territories");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Win Sets");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("FirstTurn");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("CanWin");
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("CanBlock");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("CanSetUpWin");
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("NoGoodMove");
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("My PPWS");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("My PWS");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("Opp PWS");
-            listViewItem1.Tag = AgentPercepts.MyTerr;
-            listViewItem2.Tag = AgentPercepts.OppTerr;
-            listViewItem3.Tag = AgentPercepts.AvailTerr;
-            listViewItem4.Tag = AgentPercepts.WinSets;
-            listViewItem5.Tag = AgentPercepts.FirstTurn;
-            listViewItem6.Tag = AgentPercepts.CanWin;
-            listViewItem7.Tag = AgentPercepts.CanBlock;
-            listViewItem8.Tag = AgentPercepts.CanSetUpNextTurnWin;
-            listViewItem9.Tag = AgentPercepts.NoGoodMove;
-            listViewItem10.Tag = AgentPercepts.MyPPWS;
-            listViewItem11.Tag = AgentPercepts.MyPWS;
-            listViewItem12.Tag = AgentPercepts.OppPWs;
+            //System.Windows.Forms.ListViewItem
+            MyTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("My Territories");
+            OppTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("Opp Territories");
+            AvailTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("Avail Territories");
+            WinSets_ListViewItem = new System.Windows.Forms.ListViewItem("Win Sets");
+            FirstTurn_ListViewItem = new System.Windows.Forms.ListViewItem("FirstTurn");
+            CanWin_ListViewItem = new System.Windows.Forms.ListViewItem("CanWin");
+            CanBlock_ListViewItem = new System.Windows.Forms.ListViewItem("CanBlock");
+            CanSetUpWin_ListViewItem = new System.Windows.Forms.ListViewItem("CanSetUpWin");
+            NoGoodMove_ListViewItem = new System.Windows.Forms.ListViewItem("NoGoodMove");
+            MyPPWS_ListViewItem = new System.Windows.Forms.ListViewItem("My PPWS");
+            MyPWS_ListViewItem = new System.Windows.Forms.ListViewItem("My PWS");
+            OppPWS_ListViewItem = new System.Windows.Forms.ListViewItem("Opp PWS");
+            MyTerritory_ListViewItem.Tag = AgentPercepts.MyTerr;
+            OppTerritory_ListViewItem.Tag = AgentPercepts.OppTerr;
+            AvailTerritory_ListViewItem.Tag = AgentPercepts.AvailTerr;
+            WinSets_ListViewItem.Tag = AgentPercepts.WinSets;
+            FirstTurn_ListViewItem.Tag = AgentPercepts.FirstTurn;
+            CanWin_ListViewItem.Tag = AgentPercepts.CanWin;
+            CanBlock_ListViewItem.Tag = AgentPercepts.CanBlock;
+            CanSetUpWin_ListViewItem.Tag = AgentPercepts.CanSetUpNextTurnWin;
+            NoGoodMove_ListViewItem.Tag = AgentPercepts.NoGoodMove;
+            MyPPWS_ListViewItem.Tag = AgentPercepts.MyPPWS;
+            MyPWS_ListViewItem.Tag = AgentPercepts.MyPWS;
+            OppPWS_ListViewItem.Tag = AgentPercepts.OppPWs;
             this.player1_label = new System.Windows.Forms.Label();
             this.player2_label = new System.Windows.Forms.Label();
             this.player1_comboBox = new System.Windows.Forms.ComboBox();
@@ -282,18 +283,13 @@
             this.Percept_ListView.FullRowSelect = true;
             this.Percept_ListView.GridLines = true;
             this.Percept_ListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
+            MyTerritory_ListViewItem,
+            OppTerritory_ListViewItem,
+            AvailTerritory_ListViewItem,
+            WinSets_ListViewItem,
+            MyPPWS_ListViewItem,
+            MyPWS_ListViewItem,
+            OppPWS_ListViewItem});
             this.Percept_ListView.LabelWrap = false;
             this.Percept_ListView.Location = new System.Drawing.Point(12, 255);
             this.Percept_ListView.MultiSelect = false;
@@ -606,6 +602,19 @@
         private System.Windows.Forms.Label ClaimedPos_Label;
         private System.Windows.Forms.Panel Statistics_Panel;
         private System.Windows.Forms.TextBox GameStats_TextBox;
+
+        System.Windows.Forms.ListViewItem MyTerritory_ListViewItem;
+        System.Windows.Forms.ListViewItem OppTerritory_ListViewItem;
+        System.Windows.Forms.ListViewItem AvailTerritory_ListViewItem;
+        System.Windows.Forms.ListViewItem WinSets_ListViewItem;
+        System.Windows.Forms.ListViewItem FirstTurn_ListViewItem;
+        System.Windows.Forms.ListViewItem CanWin_ListViewItem;
+        System.Windows.Forms.ListViewItem CanBlock_ListViewItem;
+        System.Windows.Forms.ListViewItem CanSetUpWin_ListViewItem;
+        System.Windows.Forms.ListViewItem NoGoodMove_ListViewItem;
+        System.Windows.Forms.ListViewItem MyPPWS_ListViewItem;
+        System.Windows.Forms.ListViewItem MyPWS_ListViewItem;
+        System.Windows.Forms.ListViewItem OppPWS_ListViewItem;
     }
 }
 

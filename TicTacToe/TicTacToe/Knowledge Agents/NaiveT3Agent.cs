@@ -34,6 +34,12 @@ namespace TicTacToe
                 onNewInfo(message);
             }
 
+            setImInterestedIn = new ArrayList();
+            setImInterestedIn.Add(pick);
+
+            whyImInterestedIn = new ArrayList();
+            whyImInterestedIn.Add(MoveReason.NavieMove);
+
             moveReason = MoveReason.NavieMove;
             reasoningAboutMove = new ArrayList();
             reasoningAboutMove.Add("I randomly selected a position from the available positions");

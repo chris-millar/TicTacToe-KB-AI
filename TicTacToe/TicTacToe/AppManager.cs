@@ -38,7 +38,7 @@ namespace TicTacToe
         {
             ListViewItem item = sender as ListViewItem;
             AgentPercepts percept = (AgentPercepts)item.Tag;
-            ui.UpdateAgentPercepts(CurrFrame, percept);
+            ui.UpdateAgentPercepts(CurrFrame, percept, false);
         }
 
         void ui_TurnMenuItemSelected(object sender, EventArgs e)

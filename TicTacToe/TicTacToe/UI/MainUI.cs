@@ -73,6 +73,15 @@ namespace TicTacToe
             }
         }
 
+
+        // COLOR DEFINITIONS //
+        Color OwnColor = Color.LawnGreen;
+        Color OppColor = Color.OrangeRed;
+        Color AvailColor = Color.Plum;
+        Color ClaimedTerritoryColor = Color.DarkRed;
+        Color PickTerritoryColor = Color.DeepSkyBlue;
+
+
         public MainUI()
         {
             InitializeComponent();
@@ -170,7 +179,7 @@ namespace TicTacToe
         {
             UpdateTurnIdFields(frame);
             UpdateActualGameBoard(frame);
-            UpdateAgentPercepts(frame, AgentPercepts.MyTerr);
+            UpdateAgentPercepts(frame, AgentPercepts.MyTerr, true);
             UpdateReasoningFields(frame);
         }
 
@@ -188,8 +197,10 @@ namespace TicTacToe
             snapInView(gameBoard, ActualGameBoard_Panel);
         }
 
-        public void UpdateAgentPercepts(TurnFrame frame, AgentPercepts perceptChoice)
+        public void UpdateAgentPercepts(TurnFrame frame, AgentPercepts perceptChoice, bool shouldUpdateMenu)
         {
+            if (shouldUpdateMenu)
+                UpdatePerceptsMenu(frame);
             T3Board perceptBoard = BuildPerceptBoard(frame, perceptChoice);
             snapInView(perceptBoard, AgentsPerception_Panel);
         }
@@ -197,7 +208,7 @@ namespace TicTacToe
         public void UpdateReasoningFields(TurnFrame frame)
         {
             fill_PositionChosen_Label.Text = frame.ClaimedTerritory.getPosition();
-            fill_Why_Label.Text = MoveReasonings.ConvertReasoning(frame.ReasoningForMove);
+            fill_Why_Label.Text = EnumToStringConverter.ConvertReasoning(frame.ReasoningForMove);
 
             Reasoning_TextBox.Clear();
             for (int i = 0; i < frame.ReasoningForHowMoveReasonDetermined.Count; i++)
@@ -232,7 +243,7 @@ namespace TicTacToe
                 {
                     int index = (int)frame.MyTerritories[i];
                     ((Button)board.BoardButtons[index]).Text = frame.player.symbol;
-                    ((Button)board.BoardButtons[index]).BackColor = System.Drawing.Color.LawnGreen;
+                    ((Button)board.BoardButtons[index]).BackColor = OwnColor;
                 }
             }
             else if (percept == AgentPercepts.OppTerr)
@@ -241,7 +252,7 @@ namespace TicTacToe
                 {
                     int index = (int)frame.OpponentsTerritories[i];
                     ((Button)board.BoardButtons[index]).Text = frame.Opponent.symbol;
-                    ((Button)board.BoardButtons[index]).BackColor = System.Drawing.Color.OrangeRed;
+                    ((Button)board.BoardButtons[index]).BackColor = OppColor;
                 }
             }
             else if (percept == AgentPercepts.AvailTerr)
@@ -250,11 +261,124 @@ namespace TicTacToe
                 {
                     int index = (int)frame.Avail[i];
                     ((Button)board.BoardButtons[index]).Text = ".";
-                    ((Button)board.BoardButtons[index]).BackColor = System.Drawing.Color.Plum;
+                    ((Button)board.BoardButtons[index]).BackColor = AvailColor;
                 }
+            }
+            else if (percept == AgentPercepts.WinSets)
+            {
+
+            }
+            else if (percept == AgentPercepts.FirstTurn)
+            {
+                //TODO: 
+                /* Once I implement weighting for each territory, this should show a color-gradient
+                 * where the darkest spot has the heighest weight, then the next highest weight is a
+                 * little lighter, and so on.
+                 */
+            }
+            else if (percept == AgentPercepts.CanWin)
+            {
+                for (int i = 0; i < frame.WinSetImInterestedIn.Count; i++)
+                {
+                    int index = (int)frame.WinSetImInterestedIn[i];
+                    TerritoryPositionState state = (TerritoryPositionState)frame.WhyImInterestedInThisWinSet[i];
+                    if (state == TerritoryPositionState.Avail)
+                    {
+                        ((Button)board.BoardButtons[index]).Text = ".";
+                        ((Button)board.BoardButtons[index]).BackColor = PickTerritoryColor;
+                    }
+                    else if (state == TerritoryPositionState.Own)
+                    {
+                        ((Button)board.BoardButtons[index]).Text = frame.player.symbol;
+                        ((Button)board.BoardButtons[index]).BackColor = OwnColor;
+                    }
+                }
+            }
+            else if (percept == AgentPercepts.CanBlock)
+            {
+                for (int i = 0; i < frame.WinSetImInterestedIn.Count; i++)
+                {
+                    int index = (int)frame.WinSetImInterestedIn[i];
+                    TerritoryPositionState state = (TerritoryPositionState)frame.WhyImInterestedInThisWinSet[i];
+                    if (state == TerritoryPositionState.Avail)
+                    {
+                        ((Button)board.BoardButtons[index]).Text = ".";
+                        ((Button)board.BoardButtons[index]).BackColor = PickTerritoryColor;
+                    }
+                    else if (state == TerritoryPositionState.OppOwn)
+                    {
+                        ((Button)board.BoardButtons[index]).Text = frame.Opponent.symbol;
+                        ((Button)board.BoardButtons[index]).BackColor = OppColor;
+                    }
+                }
+            }
+            else if (percept == AgentPercepts.CanSetUpNextTurnWin)
+            {
+                for (int i = 0; i < frame.WinSetImInterestedIn.Count; i++)
+                {
+                    int index = (int)frame.WinSetImInterestedIn[i];
+                    TerritoryPosition id = (TerritoryPosition)frame.WinSetImInterestedIn[i];
+                    TerritoryPositionState state = (TerritoryPositionState)frame.WhyImInterestedInThisWinSet[i];
+                    if (id == frame.ClaimedTerritory.position)
+                    {
+                        ((Button)board.BoardButtons[index]).Text = ".";
+                        ((Button)board.BoardButtons[index]).BackColor = PickTerritoryColor;
+                    }
+                    else if (state == TerritoryPositionState.Avail)
+                    {
+                        ((Button)board.BoardButtons[index]).Text = ".";
+                        ((Button)board.BoardButtons[index]).BackColor = AvailColor;
+                    }
+                    else if (state == TerritoryPositionState.Own)
+                    {
+                        ((Button)board.BoardButtons[index]).Text = frame.player.symbol;
+                        ((Button)board.BoardButtons[index]).BackColor = OwnColor;
+                    }
+                }
+            }
+            else if (percept == AgentPercepts.NoGoodMove)
+            {
+            }
+            else if (percept == AgentPercepts.MyPPWS)
+            {
+            }
+            else if (percept == AgentPercepts.MyPWS)
+            {
+            }
+            else if (percept == AgentPercepts.OppPPWS)
+            {
+            }
+            else if (percept == AgentPercepts.OppPWs)
+            {
             }
 
             return board;
+        }
+
+        private void UpdatePerceptsMenu(TurnFrame frame)
+        {
+            if (Percept_ListView.Items.Count > 7)
+            {
+                Percept_ListView.Items.RemoveAt(7);
+            }
+
+            ListViewItem item;
+            if (frame.ReasoningForMove == MoveReason.NULL)
+                return;
+            else if (frame.ReasoningForMove == MoveReason.NavieMove)
+                return;
+            else if (frame.ReasoningForMove == MoveReason.FirstTurn)
+                item = FirstTurn_ListViewItem;
+            else if (frame.ReasoningForMove == MoveReason.CanWin)
+                item = CanWin_ListViewItem;
+            else if (frame.ReasoningForMove == MoveReason.CanBlock)
+                item = CanBlock_ListViewItem;
+            else if (frame.ReasoningForMove == MoveReason.CanSetUpNextTurnWin)
+                item = CanSetUpWin_ListViewItem;
+            else //if (frame.ReasoningForMove == MoveReason.NoGoodMove)
+                item = NoGoodMove_ListViewItem;
+
+            Percept_ListView.Items.Add(item);
         }
 
         private void Turn_ListView_SelectedIndexChanged(object sender, EventArgs e)

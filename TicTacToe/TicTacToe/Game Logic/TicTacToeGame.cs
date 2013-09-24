@@ -140,6 +140,8 @@ namespace TicTacToe
 
             frame.ReasoningForMove = currTurnPlayer.WhatWasReasoningForMove();
             frame.ReasoningForHowMoveReasonDetermined = currTurnPlayer.WhatWasReasoningForHowMoveReasonDetermined();
+            frame.WinSetImInterestedIn = currTurnPlayer.WhatWinSetImInterestedIn();
+            frame.WhyImInterestedInThisWinSet = currTurnPlayer.WhyAmImInterestedInThisSet();
 
             printBoard();
 

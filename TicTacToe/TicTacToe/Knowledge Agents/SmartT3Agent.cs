@@ -163,38 +163,41 @@ namespace TicTacToe
                     winningSetDefn = set.list;
                     if (set.list.Contains(posToConsider))
                     {
-                        int ownCount = 0;
+                        int count = 0;
                         foreach (TerritoryPosition pos in set.list)
                         {
                             if (MyTerritories.Contains(pos))
                             {
-                                winningPositions.Insert(ownCount, pos);
-                                conditionForInclusion.Insert(ownCount, "Own");
-                                ownCount++;
+                                winningPositions.Insert(count, pos);
+                                conditionForInclusion.Insert(count, TerritoryPositionState.Own);
+                                count++;
                             }
                             else if (pos == posToConsider)
                             {
-                                winningPositions.Insert(ownCount, pos);
-                                conditionForInclusion.Insert(ownCount, "Avail");
-                                ownCount++;
+                                winningPositions.Insert(count, pos);
+                                conditionForInclusion.Insert(count, TerritoryPositionState.Avail);
+                                count++;
                             }
                         }
-                        if (ownCount == 3)
+                        if (count == 3)
                         {
                             reasoning.Add(String.Format("WinSet I think I can win from:"));
                             reasoning.Add(String.Format("{0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
                             reasoning.Add("");
                             reasoning.Add(String.Format("CanWin because:"));
                             reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ", 
-                                winningPositions[0], conditionForInclusion[0],
-                                winningPositions[1], conditionForInclusion[1],
-                                winningPositions[2], conditionForInclusion[2]));
+                                winningPositions[0], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[0]),
+                                winningPositions[1], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[1]),
+                                winningPositions[2], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[2])));
 
                             Console.WriteLine(String.Format("WinSet I think I can win from: {0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
-                            Console.WriteLine(String.Format("CanWin because: [ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ", 
-                                winningPositions[0], conditionForInclusion[0],
-                                winningPositions[1], conditionForInclusion[1],
-                                winningPositions[2], conditionForInclusion[2]));
+                            Console.WriteLine(String.Format("CanWin because: [ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
+                                winningPositions[0], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[0]),
+                                winningPositions[1], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[1]),
+                                winningPositions[2], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[2])));
+
+                            setImInterestedIn = winningPositions;
+                            whyImInterestedIn = conditionForInclusion;
                             return posToConsider;
                         }
                         winningPositions.Clear();
@@ -229,7 +232,7 @@ namespace TicTacToe
                     foreach (var v in otherTwoPositions)
                     {
                         winningPositions.Insert(count, v);
-                        conditionForInclusion.Insert(count, "Opp Owns");
+                        conditionForInclusion.Insert(count, TerritoryPositionState.OppOwn);
                         count++;
                     }
 
@@ -239,7 +242,7 @@ namespace TicTacToe
                     foreach (var v in availPos)
                     {
                         winningPositions.Add(v);
-                        conditionForInclusion.Add("Avail");
+                        conditionForInclusion.Add(TerritoryPositionState.Avail);
                     }
 
                     if (count == 2)
@@ -249,15 +252,18 @@ namespace TicTacToe
                         reasoning.Add("");
                         reasoning.Add(String.Format("CanBlock because:"));
                         reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
-                            winningPositions[0], conditionForInclusion[0],
-                            winningPositions[1], conditionForInclusion[1],
-                            winningPositions[2], conditionForInclusion[2]));
+                            winningPositions[0], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[0]),
+                            winningPositions[1], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[1]),
+                            winningPositions[2], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[2])));
 
                         Console.WriteLine(String.Format("WinSet I think my opponent can win from: {0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
                         Console.WriteLine(String.Format("CanBlock because: [ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
-                            winningPositions[0], conditionForInclusion[0],
-                            winningPositions[1], conditionForInclusion[1],
-                            winningPositions[2], conditionForInclusion[2]));
+                            winningPositions[0], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[0]),
+                            winningPositions[1], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[1]),
+                            winningPositions[2], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[2])));
+
+                        setImInterestedIn = winningPositions;
+                        whyImInterestedIn = conditionForInclusion;
                         return posToConsider;
                     }
 
@@ -290,7 +296,7 @@ namespace TicTacToe
                         if (pos == posToConsider)
                         {
                             winningPositions.Add(pos);
-                            conditionForInclusion.Add("Avail");
+                            conditionForInclusion.Add(TerritoryPositionState.Avail);
                             continue;
                         }
                         else if (OpponentTerritories.Contains(pos))
@@ -300,13 +306,13 @@ namespace TicTacToe
                         else if (MyTerritories.Contains(pos))
                         {
                             winningPositions.Add(pos);
-                            conditionForInclusion.Add("Own");
+                            conditionForInclusion.Add(TerritoryPositionState.Own);
                             ownedCount++;
                         }
                         else
                         {
                             winningPositions.Add(pos);
-                            conditionForInclusion.Add("Avail");
+                            conditionForInclusion.Add(TerritoryPositionState.Avail);
                         }
                     }
 
@@ -317,15 +323,18 @@ namespace TicTacToe
                         reasoning.Add("");
                         reasoning.Add(String.Format("CanSetUpNextTurnWin because:"));
                         reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
-                            winningPositions[0], conditionForInclusion[0],
-                            winningPositions[1], conditionForInclusion[1],
-                            winningPositions[2], conditionForInclusion[2]));
+                            winningPositions[0], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[0]),
+                            winningPositions[1], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[1]),
+                            winningPositions[2], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[2])));
 
                         Console.WriteLine(String.Format("WinSet I think I can set myself up for a next turn win from: {0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
                         Console.WriteLine(String.Format("CanSetUpNextTurnWin because: [ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
-                            winningPositions[0], conditionForInclusion[0],
-                            winningPositions[1], conditionForInclusion[1],
-                            winningPositions[2], conditionForInclusion[2]));
+                            winningPositions[0], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[0]),
+                            winningPositions[1], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[1]),
+                            winningPositions[2], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[2])));
+
+                        setImInterestedIn = winningPositions;
+                        whyImInterestedIn = conditionForInclusion;
                         return posToConsider;
                     }
 

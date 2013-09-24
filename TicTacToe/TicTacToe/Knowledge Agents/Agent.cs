@@ -23,6 +23,9 @@ namespace TicTacToe
         public MoveReason moveReason;
         public ArrayList reasoningAboutMove;
 
+        public ArrayList setImInterestedIn;
+        public ArrayList whyImInterestedIn;
+
 
         public abstract TerritoryPosition decideNextMove();
 
@@ -67,6 +70,16 @@ namespace TicTacToe
         public ArrayList WhatWasReasoningForHowMoveReasonDetermined()
         {
             return reasoningAboutMove;
+        }
+
+        public ArrayList WhatWinSetImInterestedIn()
+        {
+            return setImInterestedIn;
+        }
+
+        public ArrayList WhyAmImInterestedInThisSet()
+        {
+            return whyImInterestedIn;
         }
     }
 }

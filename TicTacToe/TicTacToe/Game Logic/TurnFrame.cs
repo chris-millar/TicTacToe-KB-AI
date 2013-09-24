@@ -21,6 +21,9 @@ namespace TicTacToe
         public MoveReason ReasoningForMove;
         public ArrayList ReasoningForHowMoveReasonDetermined; //String Arraylist
 
+        public ArrayList WinSetImInterestedIn;
+        public ArrayList WhyImInterestedInThisWinSet;
+
         public TurnFrame(int turnNum, Player player)
         {
             this.TurnNumber = turnNum;
