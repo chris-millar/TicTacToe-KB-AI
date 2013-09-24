@@ -31,12 +31,16 @@ namespace TicTacToe
             OpponentSingleWS = new ArrayList();
             MyDoubleWS = new ArrayList();
             OpponentDoubleWS = new ArrayList();
+
+            moveReason = MoveReason.NULL;
+            reasoningAboutMove = new ArrayList();
         }
 
         public TerritoryPosition ORIGdecideNextMove()
         {
             TerritoryPosition pick;
             String message;
+            ArrayList reasoning = new ArrayList();
             
             Random rand = new Random();
 
@@ -54,13 +58,16 @@ namespace TicTacToe
                     onNewInfo(message);
                 }
 
+                moveReason = MoveReason.FirstTurn;
+                reasoningAboutMove = new ArrayList();
+                reasoningAboutMove.Add("I choose this position randomly because it is my first turn.");
+
                 MyTerritories.Add(pick);
                 return pick;
             }
 
             //RULE 2: If there is an avail territory that will make me win, Then pick that territory.
-            pick = canWin();
-            Console.WriteLine(String.Format("{0} canWin() says: {1}", parent.name, pick));
+            pick = canWin(reasoning);
             if (pick != TerritoryPosition.NULL)
             {
                 message = String.Format(" - Smart Agent: \t Can Win [{0}]", pick);
@@ -73,12 +80,15 @@ namespace TicTacToe
                     onNewInfo(message);
                 }
 
+                moveReason = MoveReason.CanWin;
+                reasoningAboutMove = reasoning;
+
                 MyTerritories.Add(pick);
                 return pick;
             }
 
             //Rule 3: If there is an avail territory that will make opponent win, Then pick that territory to block them.
-            pick = canBlock();
+            pick = canBlock(reasoning);
             if (pick != TerritoryPosition.NULL)
             {
                 message = String.Format(" - Smart Agent: \t Can Block [{0}]", pick);
@@ -91,13 +101,16 @@ namespace TicTacToe
                     onNewInfo(message);
                 }
 
+                moveReason = MoveReason.CanBlock;
+                reasoningAboutMove = reasoning;
+
                 MyTerritories.Add(pick);
                 return pick;
             }
 
             //RULE 4: If there is an avail territory in a winSet from which I already own a territory and my opponent does not own a territory,
             //        Then choose one of the other two avail territories in that winSet.
-            pick = canSetUpNextTurnWin();
+            pick = canSetUpNextTurnWin(reasoning);
             if (pick != TerritoryPosition.NULL)
             {
                 message = String.Format(" - Smart Agent: \t Can Set-Up-Next-Turn-Win [{0}]", pick);
@@ -109,6 +122,9 @@ namespace TicTacToe
                 {
                     onNewInfo(message);
                 }
+
+                moveReason = MoveReason.CanSetUpNextTurnWin;
+                reasoningAboutMove = reasoning;
 
                 MyTerritories.Add(pick);
                 return pick;
@@ -126,11 +142,15 @@ namespace TicTacToe
                 onNewInfo(message);
             }
 
+            moveReason = MoveReason.NoGoodMove;
+            reasoningAboutMove = new ArrayList();
+            reasoningAboutMove.Add("I choose this position randomly because there are no more good moves remaining.");
+
             MyTerritories.Add(pick);
             return pick;
         }
 
-        private TerritoryPosition canWin()
+        private TerritoryPosition canWin(ArrayList reasoning)
         {
             ArrayList winningPositions = new ArrayList();
             ArrayList conditionForInclusion = new ArrayList();
@@ -161,6 +181,15 @@ namespace TicTacToe
                         }
                         if (ownCount == 3)
                         {
+                            reasoning.Add(String.Format("WinSet I think I can win from:"));
+                            reasoning.Add(String.Format("{0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
+                            reasoning.Add("");
+                            reasoning.Add(String.Format("CanWin because:"));
+                            reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ", 
+                                winningPositions[0], conditionForInclusion[0],
+                                winningPositions[1], conditionForInclusion[1],
+                                winningPositions[2], conditionForInclusion[2]));
+
                             Console.WriteLine(String.Format("WinSet I think I can win from: {0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
                             Console.WriteLine(String.Format("CanWin because: [ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ", 
                                 winningPositions[0], conditionForInclusion[0],
@@ -177,8 +206,12 @@ namespace TicTacToe
             return TerritoryPosition.NULL;
         }
 
-        private TerritoryPosition canBlock()
+        private TerritoryPosition canBlock(ArrayList reasoning)
         {
+            ArrayList winningPositions = new ArrayList();
+            ArrayList conditionForInclusion = new ArrayList();
+            ArrayList winningSetDefn;
+
             foreach (TerritoryPosition posToConsider in AvailTerritories)
             {
                 var winSetsWithPos = from WinSet set in WinSetDefinitions
@@ -187,6 +220,7 @@ namespace TicTacToe
 
                 foreach (WinSet set in winSetsWithPos)
                 {
+                    winningSetDefn = set.list;
                     var otherTwoPositions = from TerritoryPosition position in set.list
                                             where OpponentTerritories.Contains(position)
                                             select position;
@@ -194,21 +228,53 @@ namespace TicTacToe
                     int count = 0;
                     foreach (var v in otherTwoPositions)
                     {
+                        winningPositions.Insert(count, v);
+                        conditionForInclusion.Insert(count, "Opp Owns");
                         count++;
+                    }
+
+                    System.Collections.Generic.IEnumerable<TerritoryPosition> availPos = from TerritoryPosition position in set.list
+                                                                                         where !(OpponentTerritories.Contains(position))
+                                                                                         select position;
+                    foreach (var v in availPos)
+                    {
+                        winningPositions.Add(v);
+                        conditionForInclusion.Add("Avail");
                     }
 
                     if (count == 2)
                     {
+                        reasoning.Add(String.Format("WinSet I think my opponent can win from:"));
+                        reasoning.Add(String.Format("{0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
+                        reasoning.Add("");
+                        reasoning.Add(String.Format("CanBlock because:"));
+                        reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
+                            winningPositions[0], conditionForInclusion[0],
+                            winningPositions[1], conditionForInclusion[1],
+                            winningPositions[2], conditionForInclusion[2]));
+
+                        Console.WriteLine(String.Format("WinSet I think my opponent can win from: {0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
+                        Console.WriteLine(String.Format("CanBlock because: [ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
+                            winningPositions[0], conditionForInclusion[0],
+                            winningPositions[1], conditionForInclusion[1],
+                            winningPositions[2], conditionForInclusion[2]));
                         return posToConsider;
                     }
+
+                    winningPositions.Clear();
+                    conditionForInclusion.Clear();
                 }
             }
 
             return TerritoryPosition.NULL;
         }
 
-        private TerritoryPosition canSetUpNextTurnWin()
+        private TerritoryPosition canSetUpNextTurnWin(ArrayList reasoning)
         {
+            ArrayList winningPositions = new ArrayList();
+            ArrayList conditionForInclusion = new ArrayList();
+            ArrayList winningSetDefn;
+
             foreach (TerritoryPosition posToConsider in AvailTerritories)
             {
                 var winSetsWithPos = from WinSet set in WinSetDefinitions
@@ -217,11 +283,14 @@ namespace TicTacToe
 
                 foreach (WinSet set in winSetsWithPos)
                 {
+                    winningSetDefn = set.list;
                     int ownedCount = 0;
                     foreach (TerritoryPosition pos in set.list)
                     {
                         if (pos == posToConsider)
                         {
+                            winningPositions.Add(pos);
+                            conditionForInclusion.Add("Avail");
                             continue;
                         }
                         else if (OpponentTerritories.Contains(pos))
@@ -230,14 +299,38 @@ namespace TicTacToe
                         }
                         else if (MyTerritories.Contains(pos))
                         {
+                            winningPositions.Add(pos);
+                            conditionForInclusion.Add("Own");
                             ownedCount++;
+                        }
+                        else
+                        {
+                            winningPositions.Add(pos);
+                            conditionForInclusion.Add("Avail");
                         }
                     }
 
                     if (ownedCount == 1)
                     {
+                        reasoning.Add(String.Format("WinSet I think I can set myself up for a next turn win from:"));
+                        reasoning.Add(String.Format("{0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
+                        reasoning.Add("");
+                        reasoning.Add(String.Format("CanSetUpNextTurnWin because:"));
+                        reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
+                            winningPositions[0], conditionForInclusion[0],
+                            winningPositions[1], conditionForInclusion[1],
+                            winningPositions[2], conditionForInclusion[2]));
+
+                        Console.WriteLine(String.Format("WinSet I think I can set myself up for a next turn win from: {0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
+                        Console.WriteLine(String.Format("CanSetUpNextTurnWin because: [ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
+                            winningPositions[0], conditionForInclusion[0],
+                            winningPositions[1], conditionForInclusion[1],
+                            winningPositions[2], conditionForInclusion[2]));
                         return posToConsider;
                     }
+
+                    winningPositions.Clear();
+                    conditionForInclusion.Clear();
                 }
             }
 

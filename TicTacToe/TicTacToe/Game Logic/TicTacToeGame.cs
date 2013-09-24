@@ -19,6 +19,7 @@ namespace TicTacToe
 
         public GameOverState gameOverState;
         public bool showTurn;
+        public int TurnNumber;
 
         public Territory[] board;
         Territory[] availPositions;
@@ -30,11 +31,11 @@ namespace TicTacToe
 
 
         public event EventHandler TurnOver;
-        private void onTurnOver()
+        private void onTurnOver(TurnFrame frame)
         {
             if (TurnOver != null)
             {
-                TurnOver(this, new EventArgs());
+                TurnOver(frame, new EventArgs());
             }
         }
 
@@ -71,13 +72,14 @@ namespace TicTacToe
 
             initBoard();
             initWinSetDefinitions();
-
+            
             //turn();
         }
 
 
         public void start()
         {
+            TurnNumber = 1;
             gameOverState = GameOverState.NULL;
 
             giveAgentsStaticDomainKnowledge();
@@ -117,6 +119,13 @@ namespace TicTacToe
 
         public void turn()
         {
+            TurnFrame frame = new TurnFrame(TurnNumber, currTurnPlayer);
+            frame.Opponent = otherPlayer;
+            frame.setMyTerritories(currTurnPlayer.MyTerritories);
+            frame.setOpponentsTerritories(otherPlayer.MyTerritories);
+            frame.setAvail(availList);
+            //frame.setBoard(boardList);
+
             String turnMessage = String.Format("\nIt's {0}'s turn: \t [ {1} ]", currTurnPlayer.name, currTurnPlayer.getSymbol());
             if (shouldDisplayConsole)
                 Console.WriteLine(turnMessage);
@@ -125,7 +134,12 @@ namespace TicTacToe
 
             //Decide move & make it
             TerritoryPosition pick = currTurnPlayer.makeMove(availList, otherPlayer.MyTerritories, boardList);
-            claimTerritory(pick);
+            frame.ClaimedTerritory = claimTerritory(pick);
+
+            frame.setBoard(boardList);
+
+            frame.ReasoningForMove = currTurnPlayer.WhatWasReasoningForMove();
+            frame.ReasoningForHowMoveReasonDetermined = currTurnPlayer.WhatWasReasoningForHowMoveReasonDetermined();
 
             printBoard();
 
@@ -150,10 +164,15 @@ namespace TicTacToe
                     onNewInfo(gameoverMessage);
                 }
 
+                onTurnOver(frame);
                 onGameOver();
             }
             else
             {
+                onTurnOver(frame);
+
+                TurnNumber++;
+
                 if (currTurnPlayer == playerOne)
                 {
                     currTurnPlayer = playerTwo;
@@ -166,20 +185,22 @@ namespace TicTacToe
                 }
 
                 if (showTurn)
-                    System.Threading.Thread.Sleep(TimeSpan.FromSeconds(2));
+                    //System.Threading.Thread.Sleep(TimeSpan.FromSeconds(2));
 
-                onTurnOver();
+                
 
                 turn();
             }
         }
 
-        private void claimTerritory(TerritoryPosition position)
+        private Territory claimTerritory(TerritoryPosition position)
         {
             Territory claimed = boardList[(int) position] as Territory;
             claimed.setOwner(currTurnPlayer);
 
             availList.Remove(position);
+
+            return claimed;
         }
 
         private bool isGameOver()
@@ -223,33 +244,6 @@ namespace TicTacToe
         {
             return (availList.Count == 0);
         }
-
-        /*
-        private void initWinConditions()
-        {
-            ArrayList winSet0 = new ArrayList { TerritoryPosition.NW, TerritoryPosition.N, TerritoryPosition.NE };
-            ArrayList winSet1 = new ArrayList { TerritoryPosition.W,  TerritoryPosition.M, TerritoryPosition.E  };
-            ArrayList winSet2 = new ArrayList { TerritoryPosition.SW, TerritoryPosition.S, TerritoryPosition.SE };
-
-            ArrayList winSet3 = new ArrayList { TerritoryPosition.NW, TerritoryPosition.W, TerritoryPosition.SW };
-            ArrayList winSet4 = new ArrayList { TerritoryPosition.N,  TerritoryPosition.M, TerritoryPosition.S  };
-            ArrayList winSet5 = new ArrayList { TerritoryPosition.NE, TerritoryPosition.E, TerritoryPosition.SE };
-
-            ArrayList winSet6 = new ArrayList { TerritoryPosition.NW, TerritoryPosition.M, TerritoryPosition.SE };
-            ArrayList winSet7 = new ArrayList { TerritoryPosition.NE, TerritoryPosition.M, TerritoryPosition.SW };
-
-            winSetDefinitions = new ArrayList();
-
-            winSetDefinitions.Add(winSet0);
-            winSetDefinitions.Add(winSet1);
-            winSetDefinitions.Add(winSet2);
-            winSetDefinitions.Add(winSet3);
-            winSetDefinitions.Add(winSet4);
-            winSetDefinitions.Add(winSet5);
-            winSetDefinitions.Add(winSet6);
-            winSetDefinitions.Add(winSet7);
-        }
-         */
 
         private void initWinSetDefinitions()
         {
@@ -303,6 +297,16 @@ namespace TicTacToe
 
         }
 
+        public String GenerateGameOverMessage()
+        {
+            String message;
+            if (gameOverState == GameOverState.Win)
+                message = String.Format("\nGAME OVER: {0} is the Winner!", currTurnPlayer.name);
+            else
+                message = String.Format("\nGAME OVER: Tie! Neither player won.");
+            return message;
+        }
+
         public void UpdateOutputOptions(bool console, bool ui)
         {
             shouldDisplayConsole = console;
@@ -319,6 +323,7 @@ namespace TicTacToe
             initBoard();
             playerOne.resetForNewGame();
             playerTwo.resetForNewGame();
+            TurnNumber = 1;
         }
         
         void playerOne_NewInfo(object sender, EventArgs e)

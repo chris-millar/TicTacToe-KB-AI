@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using TicTacToe.ExplicitDomainKnowledge;
 
 namespace TicTacToe
 {
@@ -18,6 +19,9 @@ namespace TicTacToe
         public ArrayList MyTerritories;
 
         public AgentType myAgentType;
+
+        public MoveReason moveReason;
+        public ArrayList reasoningAboutMove;
 
 
         public abstract TerritoryPosition decideNextMove();
@@ -51,6 +55,18 @@ namespace TicTacToe
             MyTerritories = new ArrayList();
             OpponentTerritories = new ArrayList();
             AvailTerritories = new ArrayList();
+            moveReason = MoveReason.NULL;
+            reasoningAboutMove = new ArrayList();
+        }
+
+        public MoveReason WhatWasReasoningForMove()
+        {
+            return moveReason;
+        }
+
+        public ArrayList WhatWasReasoningForHowMoveReasonDetermined()
+        {
+            return reasoningAboutMove;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -18,6 +19,9 @@ namespace TicTacToe
         public bool experimentInProgress;
         public bool gameInProgress;
 
+        public ArrayList Frames;
+        public TurnFrame CurrFrame;
+
         public AppManager()
         {
             ui = new MainUI();
@@ -25,7 +29,24 @@ namespace TicTacToe
             ui.AgentTwoSelection += new EventHandler(ui_AgentTwoSelection);
             ui.StartButtonPressed += new EventHandler(ui_StartButtonPressed);
             ui.RadioButtonPressed += new EventHandler(ui_RadioButtonPressed);
+            ui.TurnMenuItemSelected += new EventHandler(ui_TurnMenuItemSelected);
+            ui.PerceptMenuItemSelected += new EventHandler(ui_PerceptMenuItemSelected);
             ui.InitSelections();
+        }
+
+        void ui_PerceptMenuItemSelected(object sender, EventArgs e)
+        {
+            ListViewItem item = sender as ListViewItem;
+            AgentPercepts percept = (AgentPercepts)item.Tag;
+            ui.UpdateAgentPercepts(CurrFrame, percept);
+        }
+
+        void ui_TurnMenuItemSelected(object sender, EventArgs e)
+        {
+            ListViewItem item = sender as ListViewItem;
+            int turnId = (int)item.Tag;
+            CurrFrame = (TurnFrame)Frames[turnId - 1];
+            ui.UpdateElements(CurrFrame);
         }
 
         void ui_RadioButtonPressed(object sender, EventArgs e)
@@ -56,15 +77,19 @@ namespace TicTacToe
                 {
                     //UnhookEventListener();
                     _game.resetGame();
-                    ui.ResetFauxConsole();    
+                    ui.ResetFauxConsole();
+                    ui.ResetTurnListView();
+                    Frames = new ArrayList();
                 }
                 else
                 {
                     _game = new TicTacToeGame(playerOneAgent, playerTwoAgent);
                     //_game.UpdateOutputOptions(true, true);
+                    _game.TurnOver += new EventHandler(_game_TurnOver);
                     _game.GameOver += new EventHandler(_game_GameOver);
                     _game.NewInfo += new EventHandler(game_NewInfo);
                     ui.ResetFauxConsole();
+                    Frames = new ArrayList();
                 }
 
                 if (numGamesToPlay == 1)
@@ -81,8 +106,25 @@ namespace TicTacToe
 
         }
 
+        void _game_TurnOver(object sender, EventArgs e)
+        {
+            ui.AddTurnToListView(_game.TurnNumber, _game.currTurnPlayer);
+
+            TurnFrame frame = sender as TurnFrame;
+            Frames.Add(frame);
+            ui.UpdateElements(frame);
+
+        }
+
         void _game_GameOver(object sender, EventArgs e)
         {
+            String gameOverMessage;
+            if (!experimentInProgress)
+            {
+                gameOverMessage = _game.GenerateGameOverMessage();
+                OutputGameResults(gameOverMessage);
+                CurrFrame = (TurnFrame)Frames[Frames.Count - 1];
+            }
             gameInProgress = false;
         }
 
@@ -99,7 +141,6 @@ namespace TicTacToe
                 recordGameStats(playerOneStats, playerTwoStats);
             }
 
-            //GenerateExperimentStatistics();
             OutputExperimentResults(playerOneStats, playerTwoStats);
             experimentInProgress = false;
         }
@@ -139,42 +180,45 @@ namespace TicTacToe
             return (9 - _game.availList.Count);
         }
 
-        private void GenerateExperimentStatistics()
-        {
-
-        }
 
         private void OutputExperimentResults(PlayerStatistics playerOneStats, PlayerStatistics playerTwoStats)
         {
+            ui.ResetGameStatsField();
 
             String output = String.Format("Experiment Results for {0} Games Played:", numGamesToPlay);
-            ui.AppendFauxConsole(output);
+            ui.AppendGameStatsField(output);
 
             output = String.Format("Player 1: {0}:", playerOneAgent.ToString());
-            ui.AppendFauxConsole(output);
+            ui.AppendGameStatsField(output);
 
             output = String.Format("W - L - T: {0} - {1} - {2}", playerOneStats.Wins, playerOneStats.Losses, playerOneStats.Ties);
-            ui.AppendFauxConsole(output);
+            ui.AppendGameStatsField(output);
 
             output = String.Format("Turns needed for wins: [5]: {0}   [7]: {1}   [9]: {2}", playerOneStats.NumberTurnsToWin[5], playerOneStats.NumberTurnsToWin[7], playerOneStats.NumberTurnsToWin[9]);
-            ui.AppendFauxConsole(output);
+            ui.AppendGameStatsField(output);
 
             output = String.Format("Turns needed for losses: [6]: {0}   [8]: {1}", playerOneStats.NumberTurnsToLose[6], playerOneStats.NumberTurnsToLose[8]);
-            ui.AppendFauxConsole(output);
+            ui.AppendGameStatsField(output);
 
-            ui.AppendFauxConsole("");
+            ui.AppendGameStatsField("");
 
             output = String.Format("Player 2: {0}:", playerTwoAgent.ToString());
-            ui.AppendFauxConsole(output);
+            ui.AppendGameStatsField(output);
 
             output = String.Format("W - L - T: {0} - {1} - {2}", playerTwoStats.Wins, playerTwoStats.Losses, playerTwoStats.Ties);
-            ui.AppendFauxConsole(output);
+            ui.AppendGameStatsField(output);
 
             output = String.Format("Turns needed for wins: [6]: {0}   [8]: {1}", playerTwoStats.NumberTurnsToWin[6], playerTwoStats.NumberTurnsToWin[8]);
-            ui.AppendFauxConsole(output);
+            ui.AppendGameStatsField(output);
 
             output = String.Format("Turns needed for losses: [5]: {0}   [7]: {1}   [9]: {2}", playerTwoStats.NumberTurnsToLose[5], playerTwoStats.NumberTurnsToLose[7], playerTwoStats.NumberTurnsToLose[9]);
-            ui.AppendFauxConsole(output);
+            ui.AppendGameStatsField(output);
+        }
+
+        private void OutputGameResults(String message)
+        {
+            ui.ResetGameStatsField();
+            ui.AppendGameStatsField(message);
         }
 
         private void UnhookEventListener()
@@ -211,3 +255,21 @@ namespace TicTacToe
 
     }
 }
+
+/*
+        public UserControl snapInView(UserControl selectedView)
+        {
+            ;
+
+            if (this.SwapablePane_Panel.Controls.Count > 0)
+            {
+                this.SwapablePane_Panel.Controls.RemoveAt(0);
+            }
+
+            selectedView.Dock = DockStyle.Fill;
+            this.SwapablePane_Panel.Controls.Add(selectedView);
+            
+            return selectedView;
+             
+        }
+*/

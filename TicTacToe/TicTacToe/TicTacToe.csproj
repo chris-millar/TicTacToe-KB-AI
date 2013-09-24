@@ -48,12 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExplicitDomainKnowledge\MoveReasonEnum.cs" />
     <Compile Include="ExplicitDomainKnowledge\WinSet.cs" />
     <Compile Include="Game Logic\GameOverStateEnum.cs" />
     <Compile Include="Game Logic\GameVocabEnum.cs" />
+    <Compile Include="Game Logic\TurnFrame.cs" />
     <Compile Include="Knowledge Agents\Agent.cs" />
     <Compile Include="AppManager.cs" />
     <Compile Include="Knowledge Agents\AgentType.cs" />
+    <Compile Include="UI\AgentPerceptsEnum.cs" />
     <Compile Include="UI\ExperimentStatistics.cs" />
     <Compile Include="UI\IODefnEnum.cs" />
     <Compile Include="UI\MainUI.cs">
@@ -71,6 +74,12 @@
     <Compile Include="ExplicitDomainKnowledge\TerritoryPosition.cs" />
     <Compile Include="Game Logic\TicTacToeGame.cs" />
     <Compile Include="UI\PlayerStatistics.cs" />
+    <Compile Include="UI\T3Board.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\T3Board.Designer.cs">
+      <DependentUpon>T3Board.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="UI\MainUI.resx">
       <DependentUpon>MainUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -84,6 +93,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UI\T3Board.resx">
+      <DependentUpon>T3Board.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using TicTacToe.ExplicitDomainKnowledge;
 
 namespace TicTacToe
 {
@@ -78,6 +79,21 @@ namespace TicTacToe
         public void resetForNewGame()
         {
             agent.resetForNewGame();
+        }
+
+        public MoveReason WhatWasReasoningForMove()
+        {
+            return agent.WhatWasReasoningForMove();
+        }
+
+        public ArrayList WhatWasReasoningForHowMoveReasonDetermined()
+        {
+            return agent.WhatWasReasoningForHowMoveReasonDetermined();
+        }
+
+        public AgentType getAgentType()
+        {
+            return agent.myAgentType;
         }
         
 

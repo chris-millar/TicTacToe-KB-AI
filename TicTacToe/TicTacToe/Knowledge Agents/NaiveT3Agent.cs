@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using TicTacToe.ExplicitDomainKnowledge;
 
 namespace TicTacToe
 {
@@ -15,6 +16,7 @@ namespace TicTacToe
             rand = new Random();
             myAgentType = AgentTypes.Naive;
             resetForNewGame();
+            moveReason = MoveReason.NavieMove;
         }
 
         public override TerritoryPosition decideNextMove()
@@ -31,6 +33,10 @@ namespace TicTacToe
             {
                 onNewInfo(message);
             }
+
+            moveReason = MoveReason.NavieMove;
+            reasoningAboutMove = new ArrayList();
+            reasoningAboutMove.Add("I randomly selected a position from the available positions");
 
             MyTerritories.Add(pick);
             return pick;
