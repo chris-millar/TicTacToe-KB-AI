@@ -424,16 +424,49 @@ namespace TicTacToe
 */
 
 /*
-            listViewItem1.Tag = AgentPercepts.MyTerr;
-            listViewItem2.Tag = AgentPercepts.OppTerr;
-            listViewItem3.Tag = AgentPercepts.AvailTerr;
-            listViewItem4.Tag = AgentPercepts.WinSets;
-            listViewItem5.Tag = AgentPercepts.FirstTurn;
-            listViewItem6.Tag = AgentPercepts.CanWin;
-            listViewItem7.Tag = AgentPercepts.CanBlock;
-            listViewItem8.Tag = AgentPercepts.CanSetUpNextTurnWin;
-            listViewItem9.Tag = AgentPercepts.NoGoodMove;
-            listViewItem10.Tag = AgentPercepts.MyPPWS;
-            listViewItem11.Tag = AgentPercepts.MyPWS;
-            listViewItem12.Tag = AgentPercepts.OppPWs;
+         System.Windows.Forms.ListViewItem MyTerritory_ListViewItem;
+        System.Windows.Forms.ListViewItem OppTerritory_ListViewItem;
+        System.Windows.Forms.ListViewItem AvailTerritory_ListViewItem;
+        System.Windows.Forms.ListViewItem WinSets_ListViewItem;
+        System.Windows.Forms.ListViewItem FirstTurn_ListViewItem;
+        System.Windows.Forms.ListViewItem CanWin_ListViewItem;
+        System.Windows.Forms.ListViewItem CanBlock_ListViewItem;
+        System.Windows.Forms.ListViewItem CanSetUpWin_ListViewItem;
+        System.Windows.Forms.ListViewItem NoGoodMove_ListViewItem;
+        System.Windows.Forms.ListViewItem MyPPWS_ListViewItem;
+        System.Windows.Forms.ListViewItem MyPWS_ListViewItem;
+        System.Windows.Forms.ListViewItem OppPWS_ListViewItem;
+  
+            MyTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("My Territories");
+            OppTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("Opp Territories");
+            AvailTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("Avail Territories");
+            WinSets_ListViewItem = new System.Windows.Forms.ListViewItem("Win Sets");
+            FirstTurn_ListViewItem = new System.Windows.Forms.ListViewItem("FirstTurn");
+            CanWin_ListViewItem = new System.Windows.Forms.ListViewItem("CanWin");
+            CanBlock_ListViewItem = new System.Windows.Forms.ListViewItem("CanBlock");
+            CanSetUpWin_ListViewItem = new System.Windows.Forms.ListViewItem("CanSetUpWin");
+            NoGoodMove_ListViewItem = new System.Windows.Forms.ListViewItem("NoGoodMove");
+            MyPPWS_ListViewItem = new System.Windows.Forms.ListViewItem("My PPWS");
+            MyPWS_ListViewItem = new System.Windows.Forms.ListViewItem("My PWS");
+            OppPWS_ListViewItem = new System.Windows.Forms.ListViewItem("Opp PWS");
+            MyTerritory_ListViewItem.Tag = AgentPercepts.MyTerr;
+            OppTerritory_ListViewItem.Tag = AgentPercepts.OppTerr;
+            AvailTerritory_ListViewItem.Tag = AgentPercepts.AvailTerr;
+            WinSets_ListViewItem.Tag = AgentPercepts.WinSets;
+            FirstTurn_ListViewItem.Tag = AgentPercepts.FirstTurn;
+            CanWin_ListViewItem.Tag = AgentPercepts.CanWin;
+            CanBlock_ListViewItem.Tag = AgentPercepts.CanBlock;
+            CanSetUpWin_ListViewItem.Tag = AgentPercepts.CanSetUpNextTurnWin;
+            NoGoodMove_ListViewItem.Tag = AgentPercepts.NoGoodMove;
+            MyPPWS_ListViewItem.Tag = AgentPercepts.MyPPWS;
+            MyPWS_ListViewItem.Tag = AgentPercepts.MyPWS;
+            OppPWS_ListViewItem.Tag = AgentPercepts.OppPWs;
+  
+            MyTerritory_ListViewItem,
+            OppTerritory_ListViewItem,
+            AvailTerritory_ListViewItem,
+            WinSets_ListViewItem,
+            MyPPWS_ListViewItem,
+            MyPWS_ListViewItem,
+            OppPWS_ListViewItem
 */

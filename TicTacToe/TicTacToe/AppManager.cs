@@ -57,7 +57,6 @@ namespace TicTacToe
             }
         }
 
-
         void ui_AgentOneSelection(object sender, EventArgs e)
         {
             //AgentType selection = sender as AgentType;
@@ -73,22 +72,22 @@ namespace TicTacToe
         {
             if (_game == null || _game.canStartNewGame())
             {
-                if (_game != null)
-                {
-                    //UnhookEventListener();
-                    _game.resetGame();
-                    ui.ResetFauxConsole();
-                    ui.ResetTurnListView();
-                    Frames = new ArrayList();
-                }
-                else
+                if (_game == null)
                 {
                     _game = new TicTacToeGame(playerOneAgent, playerTwoAgent);
                     //_game.UpdateOutputOptions(true, true);
                     _game.TurnOver += new EventHandler(_game_TurnOver);
                     _game.GameOver += new EventHandler(_game_GameOver);
-                    _game.NewInfo += new EventHandler(game_NewInfo);
+                    _game.NewInfo += new EventHandler(_game_NewInfo);
                     ui.ResetFauxConsole();
+                    Frames = new ArrayList();
+                }
+                else
+                {
+                    //UnhookEventListener();
+                    _game.resetGame(playerOneAgent, playerTwoAgent);
+                    ui.ResetFauxConsole();
+                    ui.ResetTurnListView();
                     Frames = new ArrayList();
                 }
 
@@ -102,30 +101,46 @@ namespace TicTacToe
                     ExecuteExperiemnts();
                 }
             }
-
-
         }
 
         void _game_TurnOver(object sender, EventArgs e)
         {
-            ui.AddTurnToListView(_game.TurnNumber, _game.currTurnPlayer);
+            if (!experimentInProgress)
+            {
+                ui.AddTurnToListView(_game.TurnNumber, _game.currTurnPlayer);
 
-            TurnFrame frame = sender as TurnFrame;
-            Frames.Add(frame);
-            ui.UpdateElements(frame);
-
+                TurnFrame frame = sender as TurnFrame;
+                Frames.Add(frame);
+                ui.UpdateElements(frame);
+            }
         }
 
         void _game_GameOver(object sender, EventArgs e)
         {
-            String gameOverMessage;
-            if (!experimentInProgress)
+            if (experimentInProgress)
             {
+                /*
+                gameInProgress = false;
+                recordGameStats(playerOneStats, playerTwoStats);
+                numGamesPlayed++;
+                if (numGamesPlayed < numGamesToPlay)
+                    playNewGame();
+                else
+                {
+                    OutputExperimentResults(playerOneStats, playerTwoStats);
+                    experimentInProgress = false;
+                }
+                 */
+                gameInProgress = false;
+            }
+            else //if (!experimentInProgress)
+            {
+                String gameOverMessage;
                 gameOverMessage = _game.GenerateGameOverMessage();
                 OutputGameResults(gameOverMessage);
                 CurrFrame = (TurnFrame)Frames[Frames.Count - 1];
+                gameInProgress = false;
             }
-            gameInProgress = false;
         }
 
         private void ExecuteExperiemnts()
@@ -134,21 +149,53 @@ namespace TicTacToe
             _game.showTurn = false;
             PlayerStatistics playerOneStats = new PlayerStatistics(_game.playerOne, playerOneAgent);
             PlayerStatistics playerTwoStats = new PlayerStatistics(_game.playerTwo, playerTwoAgent);
+            
+            numGamesPlayed = 0;
+            //_game.GameOver -= _game_ExperimentWaitForGameOver;
+            //_game.GameOver += new EventHandler(_game_ExperimentWaitForGameOver);
+
+            //playNewGame();
+
+            
             for (int i = 0; i < numGamesToPlay; i++)
             {
                 playNewGame();
                 while (gameInProgress) ;
                 recordGameStats(playerOneStats, playerTwoStats);
             }
+            
 
             OutputExperimentResults(playerOneStats, playerTwoStats);
             experimentInProgress = false;
         }
 
+        public int numGamesPlayed;
+        //public PlayerStatistics playerOneStats;
+        //public PlayerStatistics playerTwoStats;
+
+        /*
+        private void _game_ExperimentWaitForGameOver(object sender, EventArgs e)
+        {
+            if (experimentInProgress)
+            {
+                gameInProgress = false;
+                recordGameStats(playerOneStats, playerTwoStats);
+                numGamesPlayed++;
+                if (numGamesPlayed < numGamesToPlay)
+                    playNewGame();
+                else
+                {
+                    OutputExperimentResults(playerOneStats, playerTwoStats);
+                    experimentInProgress = false;
+                }
+            }
+        }
+        */
+
         private void playNewGame()
         {
             gameInProgress = true;
-            _game.resetGame();
+            _game.resetGame(playerOneAgent, playerTwoAgent);
             _game.start();
         }
 
@@ -221,16 +268,18 @@ namespace TicTacToe
             ui.AppendGameStatsField(message);
         }
 
-        private void UnhookEventListener()
+        private void UnhookGameEventListener()
         {
             if (_game != null)
             {
-                _game.NewInfo -= game_NewInfo;
+                _game.NewInfo -= _game_NewInfo;
+                _game.GameOver -= _game_GameOver;
+                _game.TurnOver -= _game_TurnOver;
                 _game = null;
             }
         }
 
-        void game_NewInfo(object sender, EventArgs e)
+        void _game_NewInfo(object sender, EventArgs e)
         {
             if (!experimentInProgress)
                 ui.AppendFauxConsole(sender as String);

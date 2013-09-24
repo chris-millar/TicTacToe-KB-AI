@@ -73,7 +73,6 @@ namespace TicTacToe
             initBoard();
             initWinSetDefinitions();
             
-            //turn();
         }
 
 
@@ -145,6 +144,8 @@ namespace TicTacToe
 
             printBoard();
 
+            var x = TurnNumber;
+
             onNewInfo("");
 
             if (isGameOver())
@@ -186,10 +187,8 @@ namespace TicTacToe
                     otherPlayer = playerTwo;
                 }
 
-                if (showTurn)
+                //if (showTurn)
                     //System.Threading.Thread.Sleep(TimeSpan.FromSeconds(2));
-
-                
 
                 turn();
             }
@@ -317,15 +316,26 @@ namespace TicTacToe
 
         public bool canStartNewGame()
         {
+            if (gameOverState == GameOverState.NULL)
+                return false;
             return true;
         }
 
-        public void resetGame()
+        public void resetGame(Agent playerOneAgent, Agent playerTwoAgent)
         {
+            playerOne = new Player("Player 1", "X", playerOneAgent);
+            playerOne.UpdateDisplayOptions(shouldDisplayConsole, shouldDisplayUI);
+            playerOne.NewInfo += new EventHandler(playerOne_NewInfo);
+
+            playerTwo = new Player("Player 2", "O", playerTwoAgent);
+            playerTwo.UpdateDisplayOptions(shouldDisplayConsole, shouldDisplayUI);
+            playerTwo.NewInfo += new EventHandler(playerTwo_NewInfo);
+
             initBoard();
             playerOne.resetForNewGame();
             playerTwo.resetForNewGame();
             TurnNumber = 1;
+            gameOverState = GameOverState.NULL;
         }
         
         void playerOne_NewInfo(object sender, EventArgs e)

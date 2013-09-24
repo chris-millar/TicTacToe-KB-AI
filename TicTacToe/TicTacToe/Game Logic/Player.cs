@@ -37,7 +37,7 @@ namespace TicTacToe
             this.name = name;
             this.symbol = symbol;
             this.agent = agent;
-            agent.NewInfo += new EventHandler(agent_NewInfo);
+            //agent.NewInfo += new EventHandler(agent_NewInfo);
 
             agent.setParent(this);
         }

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            //System.Windows.Forms.ListViewItem
             MyTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("My Territories");
             OppTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("Opp Territories");
             AvailTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("Avail Territories");
@@ -92,6 +91,7 @@
             this.ClaimedPos_Label = new System.Windows.Forms.Label();
             this.Statistics_Panel = new System.Windows.Forms.Panel();
             this.GameStats_TextBox = new System.Windows.Forms.TextBox();
+            this.AgentPerceptSubChoice_ListView = new System.Windows.Forms.ListView();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -222,13 +222,14 @@
             // fakeConsole_textBox
             // 
             this.fakeConsole_textBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.fakeConsole_textBox.Location = new System.Drawing.Point(12, 514);
+            this.fakeConsole_textBox.Location = new System.Drawing.Point(12, 531);
             this.fakeConsole_textBox.Multiline = true;
             this.fakeConsole_textBox.Name = "fakeConsole_textBox";
             this.fakeConsole_textBox.ReadOnly = true;
             this.fakeConsole_textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.fakeConsole_textBox.Size = new System.Drawing.Size(409, 418);
             this.fakeConsole_textBox.TabIndex = 8;
+            this.fakeConsole_textBox.Visible = false;
             // 
             // ActualGameBoard_Panel
             // 
@@ -245,7 +246,7 @@
             this.shapeContainer1.Name = "shapeContainer1";
             this.shapeContainer1.Shapes.AddRange(new Microsoft.VisualBasic.PowerPacks.Shape[] {
             this.lineShape1});
-            this.shapeContainer1.Size = new System.Drawing.Size(1064, 562);
+            this.shapeContainer1.Size = new System.Drawing.Size(1064, 530);
             this.shapeContainer1.TabIndex = 7;
             this.shapeContainer1.TabStop = false;
             // 
@@ -295,7 +296,7 @@
             this.Percept_ListView.MultiSelect = false;
             this.Percept_ListView.Name = "Percept_ListView";
             this.Percept_ListView.Scrollable = false;
-            this.Percept_ListView.Size = new System.Drawing.Size(131, 235);
+            this.Percept_ListView.Size = new System.Drawing.Size(131, 143);
             this.Percept_ListView.TabIndex = 13;
             this.Percept_ListView.UseCompatibleStateImageBehavior = false;
             this.Percept_ListView.View = System.Windows.Forms.View.List;
@@ -526,14 +527,31 @@
             this.GameStats_TextBox.Multiline = true;
             this.GameStats_TextBox.Name = "GameStats_TextBox";
             this.GameStats_TextBox.ReadOnly = true;
+            this.GameStats_TextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.GameStats_TextBox.Size = new System.Drawing.Size(441, 137);
             this.GameStats_TextBox.TabIndex = 0;
+            // 
+            // AgentPerceptSubChoice_ListView
+            // 
+            this.AgentPerceptSubChoice_ListView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AgentPerceptSubChoice_ListView.FullRowSelect = true;
+            this.AgentPerceptSubChoice_ListView.GridLines = true;
+            this.AgentPerceptSubChoice_ListView.LabelWrap = false;
+            this.AgentPerceptSubChoice_ListView.Location = new System.Drawing.Point(12, 404);
+            this.AgentPerceptSubChoice_ListView.MultiSelect = false;
+            this.AgentPerceptSubChoice_ListView.Name = "AgentPerceptSubChoice_ListView";
+            this.AgentPerceptSubChoice_ListView.Scrollable = false;
+            this.AgentPerceptSubChoice_ListView.Size = new System.Drawing.Size(131, 121);
+            this.AgentPerceptSubChoice_ListView.TabIndex = 18;
+            this.AgentPerceptSubChoice_ListView.UseCompatibleStateImageBehavior = false;
+            this.AgentPerceptSubChoice_ListView.View = System.Windows.Forms.View.List;
             // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1064, 562);
+            this.ClientSize = new System.Drawing.Size(1064, 530);
+            this.Controls.Add(this.AgentPerceptSubChoice_ListView);
             this.Controls.Add(this.Statistics_Panel);
             this.Controls.Add(this.Reasoning_Panel);
             this.Controls.Add(this.TurnID_Panel);
@@ -615,6 +633,7 @@
         System.Windows.Forms.ListViewItem MyPPWS_ListViewItem;
         System.Windows.Forms.ListViewItem MyPWS_ListViewItem;
         System.Windows.Forms.ListViewItem OppPWS_ListViewItem;
+        private System.Windows.Forms.ListView AgentPerceptSubChoice_ListView;
     }
 }
 
