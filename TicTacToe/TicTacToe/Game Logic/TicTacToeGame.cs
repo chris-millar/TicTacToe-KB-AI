@@ -59,7 +59,7 @@ namespace TicTacToe
 
         public TicTacToeGame(Agent one, Agent two)
         {
-            shouldDisplayUI = true;
+            shouldDisplayUI = false;
             shouldDisplayConsole = false;
 
             playerOne = new Player("Player 1", "X", one);
