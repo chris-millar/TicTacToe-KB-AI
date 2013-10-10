@@ -9,23 +9,36 @@ namespace TicTacToe
 {
     public abstract class Agent
     {
+        // Meta-Knowledge about Self //
         public Player parent;
+        public AgentType myAgentType;
         public event EventHandler NewInfo;
-
+        
+        
+        // Long Term Memory //
         public ArrayList WinSetDefinitions;
-
+        
+        public ArrayList ListOfGameFrames;
+        
+        
+        // Short Term Memory //
         public ArrayList AvailTerritories;
         public ArrayList OpponentTerritories;
         public ArrayList MyTerritories;
 
-        public AgentType myAgentType;
 
+        public TerritoryPosition MyPick;
         public MoveReason moveReason;
         public ArrayList reasoningAboutMove;
 
         public ArrayList setImInterestedIn;
         public ArrayList whyImInterestedIn;
 
+        public ArrayList ListOfCurrGameTurnFrames;
+        public int GameIndex;
+        public int TurnIndex;
+
+        
 
         public abstract TerritoryPosition decideNextMove();
 
@@ -53,6 +66,13 @@ namespace TicTacToe
             }
         }
 
+        public Agent()
+        {
+            ListOfGameFrames = new ArrayList();
+            GameIndex = 0;
+            TurnIndex = 0;
+        }
+
         public virtual void resetForNewGame()
         {
             MyTerritories = new ArrayList();
@@ -60,6 +80,10 @@ namespace TicTacToe
             AvailTerritories = new ArrayList();
             moveReason = MoveReason.NULL;
             reasoningAboutMove = new ArrayList();
+
+            TurnIndex = 0;
+            ListOfCurrGameTurnFrames = new ArrayList();
+            ListOfGameFrames.Add(ListOfCurrGameTurnFrames);
         }
 
         public MoveReason WhatWasReasoningForMove()

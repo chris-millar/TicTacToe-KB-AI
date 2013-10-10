@@ -308,10 +308,8 @@ namespace TicTacToe
             {
                 return new SmartT3Agent();
             }
-            else
-            {
-                throw new InvalidOperationException(String.Format("AgentType: {0}", type));
-            }
+
+            return new NaiveT3Agent();
         }
 
     }

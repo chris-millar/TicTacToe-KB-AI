@@ -125,11 +125,13 @@ namespace TicTacToe
             frame.setAvail(availList);
             //frame.setBoard(boardList);
 
+            /*
             String turnMessage = String.Format("\nIt's {0}'s turn: \t [ {1} ]", currTurnPlayer.name, currTurnPlayer.getSymbol());
             if (shouldDisplayConsole)
                 Console.WriteLine(turnMessage);
             if (shouldDisplayUI)
                 onNewInfo(turnMessage);
+            */
 
             //Decide move & make it
             TerritoryPosition pick = currTurnPlayer.makeMove(availList, otherPlayer.MyTerritories, boardList);
@@ -141,6 +143,13 @@ namespace TicTacToe
             frame.ReasoningForHowMoveReasonDetermined = currTurnPlayer.WhatWasReasoningForHowMoveReasonDetermined();
             frame.WinSetImInterestedIn = currTurnPlayer.WhatWinSetImInterestedIn();
             frame.WhyImInterestedInThisWinSet = currTurnPlayer.WhyAmImInterestedInThisSet();
+
+            //////////////////////////////////////////////////////////////////////////////
+
+            //TurnFrame frame = new TurnFrame(TurnNumber, currTurnPlayer, winSetDefinitions);
+            //frame.Opponent = otherPlayer;
+
+            
 
             printBoard();
 

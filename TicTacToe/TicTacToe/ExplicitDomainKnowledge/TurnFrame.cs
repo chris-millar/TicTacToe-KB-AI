@@ -13,6 +13,10 @@ namespace TicTacToe
         public Player Opponent;
         public int TurnNumber;
         public ArrayList Board;
+
+        public ArrayList PreBoard;
+        public ArrayList PostBoard;
+
         public ArrayList Avail;
         public ArrayList MyTerritories;
         public ArrayList OpponentsTerritories;
@@ -24,12 +28,14 @@ namespace TicTacToe
         public ArrayList WinSetImInterestedIn;
         public ArrayList WhyImInterestedInThisWinSet;
 
-        public ArrayList MyPPWS;
-        public ArrayList MyPWS;
-        public ArrayList OppPPWS;
-        public ArrayList OppPWS;
+        public ArrayList MySingleSets;
+        public ArrayList MyDoubleSets;
+        public ArrayList OppSingleSets;
+        public ArrayList OppDoubleSets;
 
         public ArrayList WinSetDefinitions;
+
+        public int GameFrameID;
 
         public TurnFrame(int turnNum, Player player, ArrayList winSetDefn)
         {
@@ -54,6 +60,32 @@ namespace TicTacToe
                 terr.setOwner(((Territory)currBoard[i]).getOwner());
                 terr.symbol = ((Territory)currBoard[i]).symbol;
                 Board.Add(terr);
+            }
+        }
+
+        public void setPreBoard(ArrayList currBoard)
+        {
+            PreBoard = new ArrayList();
+            Territory terr;
+            for (int i = 0; i < currBoard.Count; i++)
+            {
+                terr = new Territory(((Territory)currBoard[i]).position);
+                terr.setOwner(((Territory)currBoard[i]).getOwner());
+                terr.symbol = ((Territory)currBoard[i]).symbol;
+                PreBoard.Add(terr);
+            }
+        }
+
+        public void setPostBoard(ArrayList currBoard)
+        {
+            PostBoard = new ArrayList();
+            Territory terr;
+            for (int i = 0; i < currBoard.Count; i++)
+            {
+                terr = new Territory(((Territory)currBoard[i]).position);
+                terr.setOwner(((Territory)currBoard[i]).getOwner());
+                terr.symbol = ((Territory)currBoard[i]).symbol;
+                PostBoard.Add(terr);
             }
         }
 

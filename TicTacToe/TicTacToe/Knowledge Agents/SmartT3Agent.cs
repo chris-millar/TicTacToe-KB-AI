@@ -9,13 +9,13 @@ namespace TicTacToe
 {
     public class SmartT3Agent : Agent
     {
-        ArrayList MySingleWS;
-        ArrayList OpponentSingleWS;
-        ArrayList MyDoubleWS;
-        ArrayList OpponentDoubleWS;  
+        ArrayList MySingleSets;
+        ArrayList MyDoubleSets;
+        ArrayList OppSingleSets;
+        ArrayList OppDoubleSets;  
 
 
-        public SmartT3Agent()
+        public SmartT3Agent() : base()
         {
             myAgentType = AgentTypes.Smart;
             resetForNewGame();
@@ -27,13 +27,20 @@ namespace TicTacToe
             OpponentTerritories = new ArrayList();
             AvailTerritories = new ArrayList();
 
-            MySingleWS = new ArrayList();
-            OpponentSingleWS = new ArrayList();
-            MyDoubleWS = new ArrayList();
-            OpponentDoubleWS = new ArrayList();
+            MySingleSets = new ArrayList();
+            OppSingleSets = new ArrayList();
+            MyDoubleSets = new ArrayList();
+            OppDoubleSets = new ArrayList();
 
             moveReason = MoveReason.NULL;
             reasoningAboutMove = new ArrayList();
+        }
+
+
+
+        public override void UpdatePercepts()
+        {
+
         }
 
         public TerritoryPosition ORIGdecideNextMove()
@@ -185,7 +192,7 @@ namespace TicTacToe
                             reasoning.Add(String.Format("{0} - {1} - {2}", winningSetDefn[0], winningSetDefn[1], winningSetDefn[2]));
                             reasoning.Add("");
                             reasoning.Add(String.Format("CanWin because:"));
-                            reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ", 
+                            reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ]", 
                                 winningPositions[0], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[0]),
                                 winningPositions[1], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[1]),
                                 winningPositions[2], EnumToStringConverter.ConvertTerritoryPositionState((TerritoryPositionState)conditionForInclusion[2])));
@@ -365,13 +372,17 @@ namespace TicTacToe
             }
             else
             {
-                PreDecisionUpdateTrackedSets();
-                TerritoryPosition pick = NEWdecideNextMove();
-                PostDecisionUpdateTracedSets(pick);
-                return pick;
+                //PreDecisionUpdateTrackedSets();
+                //TerritoryPosition pick = NEWdecideNextMove();
+                //PostDecisionUpdateTracedSets(pick);
+                //return pick;
+                return TerritoryPosition.NULL;
             }
         }
 
+        #region First Attempt to Use Sets Only
+
+        /*
         public TerritoryPosition NEWdecideNextMove()
         {
             TerritoryPosition pick;
@@ -410,9 +421,9 @@ namespace TicTacToe
 
         private TerritoryPosition canWin_lookAtSets()
         {
-            if (MyDoubleWS.Count != 0)
+            if (MyDoubleSets.Count != 0)
             {
-                WinSet winningSet = (WinSet)MyDoubleWS[0];
+                WinSet winningSet = (WinSet)MyDoubleSets[0];
                 foreach (TerritoryPosition pos in winningSet.list)
                 {
                     if (!MyTerritories.Contains(pos))
@@ -425,9 +436,9 @@ namespace TicTacToe
 
         private TerritoryPosition canBlock_lookAtSets()
         {
-            if (OpponentDoubleWS.Count != 0)
+            if (OppDoubleSets.Count != 0)
             {
-                WinSet blockingSet = (WinSet)OpponentDoubleWS[0];
+                WinSet blockingSet = (WinSet)OppDoubleSets[0];
                 foreach (TerritoryPosition pos in blockingSet.list)
                 {
                     if (!OpponentTerritories.Contains(pos))
@@ -440,9 +451,9 @@ namespace TicTacToe
 
         private TerritoryPosition canSetUpNextTurnWin_lookAtSets()
         {
-            if (MySingleWS.Count != 0)
+            if (MySingleSets.Count != 0)
             {
-                WinSet potentialSet = (WinSet)MySingleWS[0];
+                WinSet potentialSet = (WinSet)MySingleSets[0];
                 foreach (TerritoryPosition pos in potentialSet.list)
                 {
                     if (!MyTerritories.Contains(pos))
@@ -482,48 +493,48 @@ namespace TicTacToe
 
         private void trackOppSet(WinSet set)
         {
-            if (OpponentSingleWS.Contains(set))
+            if (OppSingleSets.Contains(set))
             {
-                OpponentSingleWS.Remove(set);
-                OpponentDoubleWS.Add(set);
+                OppSingleSets.Remove(set);
+                OppDoubleSets.Add(set);
             }
             else
             {
-                OpponentSingleWS.Add(set);
+                OppSingleSets.Add(set);
             }
         }
 
         private void trackMySet(WinSet set)
         {
-            if (MySingleWS.Contains(set))
+            if (MySingleSets.Contains(set))
             {
-                MySingleWS.Remove(set);
-                MyDoubleWS.Add(set);
+                MySingleSets.Remove(set);
+                MyDoubleSets.Add(set);
             }
             else
             {
-                MySingleWS.Add(set);
+                MySingleSets.Add(set);
             }
         }
 
         private bool removeSetFromMineAndReport(WinSet set)
         {
-            bool removed = MySingleWS.Contains(set) || MyDoubleWS.Contains(set);
+            bool removed = MySingleSets.Contains(set) || MyDoubleSets.Contains(set);
             if (removed)
             {
-                MySingleWS.Remove(set);
-                MyDoubleWS.Remove(set);
+                MySingleSets.Remove(set);
+                MyDoubleSets.Remove(set);
             }
             return removed;
         }
 
         private bool removeSetFromOppAndReport(WinSet set)
         {
-            bool removed = OpponentSingleWS.Contains(set) || OpponentDoubleWS.Contains(set);
+            bool removed = OppSingleSets.Contains(set) || OppDoubleSets.Contains(set);
             if (removed)
             {
-                OpponentSingleWS.Remove(set);
-                OpponentDoubleWS.Remove(set);
+                OppSingleSets.Remove(set);
+                OppDoubleSets.Remove(set);
             }
             return removed;
         }
@@ -542,7 +553,9 @@ namespace TicTacToe
         {
             return (TerritoryPosition) OpponentTerritories[OpponentTerritories.Count - 1];
         }
+        */
 
+        #endregion
 
 
     }

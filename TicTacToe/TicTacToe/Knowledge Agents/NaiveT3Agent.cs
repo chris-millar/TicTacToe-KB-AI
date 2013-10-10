@@ -11,7 +11,7 @@ namespace TicTacToe
     {
         Random rand;
 
-        public NaiveT3Agent()
+        public NaiveT3Agent() : base()
         {
             rand = new Random();
             myAgentType = AgentTypes.Naive;

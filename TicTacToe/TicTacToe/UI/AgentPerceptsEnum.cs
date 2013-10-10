@@ -16,9 +16,9 @@ namespace TicTacToe
         CanBlock,
         CanSetUpNextTurnWin,
         NoGoodMove,
-        MyPPWS,
-        MyPWS,
-        OppPPWS,
-        OppPWs
+        MySingleSets,
+        MyDoubleSets,
+        OppSingleSets,
+        OppDoubleSets
     }
 }

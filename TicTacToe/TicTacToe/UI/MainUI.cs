@@ -384,50 +384,50 @@ namespace TicTacToe
             {
                 CyclePercept_Button.Visible = false;
             }
-            else if (percept == AgentPercepts.MyPPWS)
+            else if (percept == AgentPercepts.MySingleSets)
             {
                 if (canResetCycle)
                 {
                     CyclePercept_Button.Visible = true;
-                    if (frame.MyPPWS != null && frame.MyPPWS.Count > 0)
+                    if (frame.MySingleSets != null && frame.MySingleSets.Count > 0)
                     {
-                        cyclePerceptSize = frame.MyPPWS.Count;
+                        cyclePerceptSize = frame.MySingleSets.Count;
                         cyclePerceptValue = 0;
                     }
                 }
             }
-            else if (percept == AgentPercepts.MyPWS)
+            else if (percept == AgentPercepts.MyDoubleSets)
             {
                 if (canResetCycle)
                 {
                     CyclePercept_Button.Visible = true;
-                    if (frame.MyPWS != null && frame.MyPWS.Count > 0)
+                    if (frame.MyDoubleSets != null && frame.MyDoubleSets.Count > 0)
                     {
-                        cyclePerceptSize = frame.MyPWS.Count;
+                        cyclePerceptSize = frame.MyDoubleSets.Count;
                         cyclePerceptValue = 0;
                     }
                 }
             }
-            else if (percept == AgentPercepts.OppPPWS)
+            else if (percept == AgentPercepts.OppSingleSets)
             {
                 if (canResetCycle)
                 {
                     CyclePercept_Button.Visible = true;
-                    if (frame.OppPPWS != null && frame.OppPPWS.Count > 0)
+                    if (frame.OppSingleSets != null && frame.OppSingleSets.Count > 0)
                     {
-                        cyclePerceptSize = frame.OppPPWS.Count;
+                        cyclePerceptSize = frame.OppSingleSets.Count;
                         cyclePerceptValue = 0;
                     }
                 }
             }
-            else if (percept == AgentPercepts.OppPWs)
+            else if (percept == AgentPercepts.OppDoubleSets)
             {
                 if (canResetCycle)
                 {
                     CyclePercept_Button.Visible = true;
-                    if (frame.OppPWS != null && frame.OppPWS.Count > 0)
+                    if (frame.OppDoubleSets != null && frame.OppDoubleSets.Count > 0)
                     {
-                        cyclePerceptSize = frame.OppPWS.Count;
+                        cyclePerceptSize = frame.OppDoubleSets.Count;
                         cyclePerceptValue = 0;
                     }
                 }

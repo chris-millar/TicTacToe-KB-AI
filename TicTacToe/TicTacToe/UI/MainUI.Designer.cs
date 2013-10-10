@@ -49,9 +49,9 @@
             CanBlock_ListViewItem.Tag = AgentPercepts.CanBlock;
             CanSetUpWin_ListViewItem.Tag = AgentPercepts.CanSetUpNextTurnWin;
             NoGoodMove_ListViewItem.Tag = AgentPercepts.NoGoodMove;
-            MyPPWS_ListViewItem.Tag = AgentPercepts.MyPPWS;
-            MyPWS_ListViewItem.Tag = AgentPercepts.MyPWS;
-            OppPWS_ListViewItem.Tag = AgentPercepts.OppPWs;
+            MyPPWS_ListViewItem.Tag = AgentPercepts.MySingleSets;
+            MyPWS_ListViewItem.Tag = AgentPercepts.MyDoubleSets;
+            OppPWS_ListViewItem.Tag = AgentPercepts.OppDoubleSets;
             this.player1_label = new System.Windows.Forms.Label();
             this.player2_label = new System.Windows.Forms.Label();
             this.player1_comboBox = new System.Windows.Forms.ComboBox();

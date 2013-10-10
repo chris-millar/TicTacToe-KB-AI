@@ -66,11 +66,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExplicitDomainKnowledge\GameFrame.cs" />
     <Compile Include="ExplicitDomainKnowledge\MoveReasonEnum.cs" />
     <Compile Include="ExplicitDomainKnowledge\WinSet.cs" />
     <Compile Include="Game Logic\GameOverStateEnum.cs" />
     <Compile Include="Game Logic\GameVocabEnum.cs" />
-    <Compile Include="Game Logic\TurnFrame.cs" />
+    <Compile Include="ExplicitDomainKnowledge\TurnFrame.cs" />
     <Compile Include="Knowledge Agents\Agent.cs" />
     <Compile Include="AppManager.cs" />
     <Compile Include="Knowledge Agents\AgentType.cs" />
