@@ -455,6 +455,24 @@ namespace TicTacToe
                         cyclePerceptValue = 0;
                     }
                 }
+
+                if (frame.OppSingleSets != null && frame.OppSingleSets.Count > 0)
+                {
+                    SingleSet set = (SingleSet)frame.OppSingleSets[cyclePerceptValue];
+
+                    int OwnIndex = (int)set.PosIOwn;
+                    ((Button)board.BoardButtons[OwnIndex]).Text = frame.Opponent.symbol;
+                    ((Button)board.BoardButtons[OwnIndex]).BackColor = OppColor;
+
+                    int AvailIndex = (int)set.PosAvailOne;
+                    ((Button)board.BoardButtons[AvailIndex]).Text = ".";
+                    ((Button)board.BoardButtons[AvailIndex]).BackColor = AvailColor;
+
+                    AvailIndex = (int)set.PosAvailTwo;
+                    ((Button)board.BoardButtons[AvailIndex]).Text = ".";
+                    ((Button)board.BoardButtons[AvailIndex]).BackColor = AvailColor;
+                }
+
             }
             else if (percept == AgentPercepts.OppDoubleSets)
             {
@@ -494,9 +512,9 @@ namespace TicTacToe
 
         private void UpdatePerceptsMenu(TurnFrame frame)
         {
-            if (Percept_ListView.Items.Count > 7)
+            if (Percept_ListView.Items.Count > 8)
             {
-                Percept_ListView.Items.RemoveAt(7);
+                Percept_ListView.Items.RemoveAt(8);
             }
 
             ListViewItem item;
@@ -586,7 +604,7 @@ namespace TicTacToe
 */
 
 /*
-         System.Windows.Forms.ListViewItem MyTerritory_ListViewItem;
+        System.Windows.Forms.ListViewItem MyTerritory_ListViewItem;
         System.Windows.Forms.ListViewItem OppTerritory_ListViewItem;
         System.Windows.Forms.ListViewItem AvailTerritory_ListViewItem;
         System.Windows.Forms.ListViewItem WinSets_ListViewItem;
@@ -595,9 +613,10 @@ namespace TicTacToe
         System.Windows.Forms.ListViewItem CanBlock_ListViewItem;
         System.Windows.Forms.ListViewItem CanSetUpWin_ListViewItem;
         System.Windows.Forms.ListViewItem NoGoodMove_ListViewItem;
-        System.Windows.Forms.ListViewItem MyPPWS_ListViewItem;
-        System.Windows.Forms.ListViewItem MyPWS_ListViewItem;
-        System.Windows.Forms.ListViewItem OppPWS_ListViewItem;
+        System.Windows.Forms.ListViewItem MySingleSets_ListViewItem;
+        System.Windows.Forms.ListViewItem MyDoubleSets_ListViewItem;
+        System.Windows.Forms.ListViewItem OppDoubleSets_ListViewItem;
+        System.Windows.Forms.ListViewItem OppSingleSets_ListViewItem;
   
             MyTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("My Territories");
             OppTerritory_ListViewItem = new System.Windows.Forms.ListViewItem("Opp Territories");
@@ -608,9 +627,10 @@ namespace TicTacToe
             CanBlock_ListViewItem = new System.Windows.Forms.ListViewItem("CanBlock");
             CanSetUpWin_ListViewItem = new System.Windows.Forms.ListViewItem("CanSetUpWin");
             NoGoodMove_ListViewItem = new System.Windows.Forms.ListViewItem("NoGoodMove");
-            MyPPWS_ListViewItem = new System.Windows.Forms.ListViewItem("My PPWS");
-            MyPWS_ListViewItem = new System.Windows.Forms.ListViewItem("My PWS");
-            OppPWS_ListViewItem = new System.Windows.Forms.ListViewItem("Opp PWS");
+            MySingleSets_ListViewItem = new System.Windows.Forms.ListViewItem("My SingleSets");
+            MyDoubleSets_ListViewItem = new System.Windows.Forms.ListViewItem("My DoubleSets");
+            OppSingleSets_ListViewItem = new System.Windows.Forms.ListViewItem("Opp SingleSets");
+            OppDoubleSets_ListViewItem = new System.Windows.Forms.ListViewItem("Opp DoubleSets");
             MyTerritory_ListViewItem.Tag = AgentPercepts.MyTerr;
             OppTerritory_ListViewItem.Tag = AgentPercepts.OppTerr;
             AvailTerritory_ListViewItem.Tag = AgentPercepts.AvailTerr;
@@ -620,15 +640,18 @@ namespace TicTacToe
             CanBlock_ListViewItem.Tag = AgentPercepts.CanBlock;
             CanSetUpWin_ListViewItem.Tag = AgentPercepts.CanSetUpNextTurnWin;
             NoGoodMove_ListViewItem.Tag = AgentPercepts.NoGoodMove;
-            MyPPWS_ListViewItem.Tag = AgentPercepts.MyPPWS;
-            MyPWS_ListViewItem.Tag = AgentPercepts.MyPWS;
-            OppPWS_ListViewItem.Tag = AgentPercepts.OppPWs;
+            MySingleSets_ListViewItem.Tag = AgentPercepts.MySingleSets;
+            MyDoubleSets_ListViewItem.Tag = AgentPercepts.MyDoubleSets;
+            OppSingleSets_ListViewItem.Tag = AgentPercepts.OppSingleSets;
+            OppDoubleSets_ListViewItem.Tag = AgentPercepts.OppDoubleSets;
   
+            this.Percept_ListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             MyTerritory_ListViewItem,
             OppTerritory_ListViewItem,
             AvailTerritory_ListViewItem,
             WinSets_ListViewItem,
-            MyPPWS_ListViewItem,
-            MyPWS_ListViewItem,
-            OppPWS_ListViewItem
+            MySingleSets_ListViewItem,
+            MyDoubleSets_ListViewItem,
+            OppSingleSets_ListViewItem,
+            OppDoubleSets_ListViewItem});
 */

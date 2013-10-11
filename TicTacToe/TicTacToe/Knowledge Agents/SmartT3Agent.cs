@@ -45,6 +45,8 @@ namespace TicTacToe
             ListOfGameFrames.Add(ListOfCurrGameTurnFrames);
         }
 
+        #region Start of Turn Perception
+
         public override void thinkAtStartOfTurn(int turnNumber, ArrayList availTerritories, ArrayList opponentsTerritories, ArrayList board)
         {
             UpdateMemAboutCurrGameState(availTerritories, opponentsTerritories, board);
@@ -102,6 +104,181 @@ namespace TicTacToe
             CanSetUpNextTurnWin = false;
             NoGoodMoveRemaining = false;
         }
+
+
+        private void calculateMySingleSets()
+        {
+            foreach (TerritoryPosition posToConsider in MyTerritories)
+            {
+                var winSetsWithPos = from WinSet set in WinSetDefinitions
+                                     where set.list.Contains(posToConsider)
+                                     select set;
+
+                foreach (WinSet set in winSetsWithPos)
+                {
+                    int ownedCount = 0;
+                    int availCount = 0;
+                    SingleSet singleSet = new SingleSet(set);
+
+                    foreach (TerritoryPosition pos in set.list)
+                    {
+                        if (pos == posToConsider)
+                        {
+                            singleSet.PosIOwn = pos;
+                            ownedCount++;
+                            continue;
+                        }
+                        else if (AvailTerritories.Contains(pos))
+                        {
+                            if (availCount == 0)
+                            {
+                                singleSet.PosAvailOne = pos;
+                                availCount++;
+                            }
+                            else if (availCount == 1)
+                            {
+                                singleSet.PosAvailTwo = pos;
+                                availCount++;
+                            }
+                        }
+                        else if (MyTerritories.Contains(pos))
+                        {
+                            break;
+                        }
+                        else if (OpponentTerritories.Contains(pos))
+                        {
+                            break;
+                        }
+                    }
+
+                    if (ownedCount == 1 && availCount == 2)
+                    {
+                        MySingleSets.Add(singleSet);
+                    }
+                }
+            }
+        }
+
+        private void calculateMyDoubleSets()
+        {
+            foreach (WinSet set in WinSetDefinitions)
+            {
+                int ownedCount = 0;
+                int availCount = 0;
+                DoubleSet doubleSet = new DoubleSet(set);
+                foreach (TerritoryPosition pos in set.list)
+                {
+                    if (MyTerritories.Contains(pos))
+                    {
+                        if (ownedCount == 0)
+                        {
+                            doubleSet.PosIOwnOne = pos;
+                            ownedCount++;
+                        }
+                        else if (ownedCount == 1)
+                        {
+                            doubleSet.PosIOwnTwo = pos;
+                            ownedCount++;
+                        }
+                    }
+                    else if (AvailTerritories.Contains(pos))
+                    {
+                        doubleSet.PosAvail = pos;
+                        availCount++;
+                    }
+                    else if (OpponentTerritories.Contains(pos))
+                    {
+                        break;
+                    }
+                }
+                if (ownedCount == 2 && availCount == 1)
+                {
+                    MyDoubleSets.Add(doubleSet);
+                }
+  
+            }
+        }
+
+        private void calculateOppSingleSets()
+        {
+            foreach (WinSet set in WinSetDefinitions)
+            {
+                int ownedCount = 0;
+                int availCount = 0;
+                SingleSet singleSet = new SingleSet(set);
+                foreach (TerritoryPosition pos in set.list)
+                {
+                    if (AvailTerritories.Contains(pos))
+                    {
+                        if (availCount == 0)
+                        {
+                            singleSet.PosAvailOne = pos;
+                            availCount++;
+                        }
+                        else if (availCount == 1)
+                        {
+                            singleSet.PosAvailTwo = pos;
+                            availCount++;
+                        }
+                    }
+                    else if (OpponentTerritories.Contains(pos))
+                    {
+                        singleSet.PosIOwn = pos;
+                        ownedCount++;
+                    }
+                    else if (MyTerritories.Contains(pos))
+                    {
+                        break;
+                    }
+                }
+                if (ownedCount == 1 && availCount == 2)
+                {
+                    OppSingleSets.Add(singleSet);
+                }
+
+            }
+        }
+
+        private void calculateOppDoubleSets()
+        {
+            foreach (WinSet set in WinSetDefinitions)
+            {
+                int ownedCount = 0;
+                int availCount = 0;
+                DoubleSet doubleSet = new DoubleSet(set);
+                foreach (TerritoryPosition pos in set.list)
+                {
+                    if (OpponentTerritories.Contains(pos))
+                    {
+                        if (ownedCount == 0)
+                        {
+                            doubleSet.PosIOwnOne = pos;
+                            ownedCount++;
+                        }
+                        else if (ownedCount == 1)
+                        {
+                            doubleSet.PosIOwnTwo = pos;
+                            ownedCount++;
+                        }
+                    }
+                    else if (AvailTerritories.Contains(pos))
+                    {
+                        doubleSet.PosAvail = pos;
+                        availCount++;
+                    }
+                    else if (MyTerritories.Contains(pos))
+                    {
+                        break;
+                    }
+                }
+                if (ownedCount == 2 && availCount == 1)
+                {
+                    OppDoubleSets.Add(doubleSet);
+                }
+
+            }
+        }
+        
 
         private void DetermineIfFirstTurn()
         {
@@ -162,6 +339,208 @@ namespace TicTacToe
                 NoGoodMoveRemaining = false;
             }
         }
+
+        #endregion
+
+
+        #region Durring Turn Decision Process
+
+        public override void decideNextMove()
+        {
+            //Project 3 way of doing it:
+            MyPick = RuleSelectorAndRuleApplier();   
+
+
+            Territory claimed = Board[(int)MyPick] as Territory;
+            CurrTurnFrame.ClaimedTerritory = claimed;
+            CurrTurnFrame.ReasoningForMove = moveReason;
+            CurrTurnFrame.ReasoningForHowMoveReasonDetermined = reasoningAboutMove;
+            CurrTurnFrame.WinSetImInterestedIn = setImInterestedIn;
+            CurrTurnFrame.WhyImInterestedInThisWinSet = whyImInterestedIn;
+
+            CurrTurnFrame.IsFirstTurn = IsFirstTurn;
+            CurrTurnFrame.CanWin = CanWin;
+            CurrTurnFrame.CanBlock = CanBlock;
+            CurrTurnFrame.CanSetUpNextTurnWin = CanSetUpNextTurnWin;
+            CurrTurnFrame.NoGoodMoveRemaining = NoGoodMoveRemaining;
+  
+
+            //Project 1+2 way of doing it:
+                //ORIGdecideNextMove();
+                
+            //Alternate Method I was trying of doing it:
+                //PreDecisionUpdateTrackedSets();
+                //TerritoryPosition pick = NEWdecideNextMove();
+                //PostDecisionUpdateTracedSets(pick);
+                //return pick;
+                //return TerritoryPosition.NULL;
+        }
+
+
+        public TerritoryPosition RuleSelectorAndRuleApplier()
+        {
+            //RULE 1: If I do not own any territories yet, Then pick my first one randomly.
+            if (IsFirstTurn)
+            {
+                return BuildSingleSet();
+            }
+
+            //RULE 2: If there is an avail territory that will make me win, Then pick that territory.
+            if (CanWin)
+            {
+                return CompleteMySet();
+            }
+
+            //Rule 3: If there is an avail territory that will make opponent win, Then pick that territory to block them.
+            if (CanBlock)
+            {
+                return CompleteOppSet();
+            }
+
+            //RULE 4: If there is an avail territory in a winSet from which I already own a territory and my opponent does not own a territory,
+            //        Then choose one of the other two avail territories in that winSet.
+            if (CanSetUpNextTurnWin)
+            {
+                return BuildDoubleSet();
+            }
+            
+            //RULE 5: If there are avail territories, Then pick my one randomly.
+            if (NoGoodMoveRemaining)
+            {
+                return PickRandom();
+            }
+
+            return TerritoryPosition.NULL;
+        }
+
+
+        private TerritoryPosition BuildSingleSet()
+        {
+            Random rand = new Random();
+            TerritoryPosition pick = (TerritoryPosition)AvailTerritories[rand.Next(0, AvailTerritories.Count)];
+
+            moveReason = MoveReason.FirstTurn;
+            reasoningAboutMove = new ArrayList();
+            reasoningAboutMove.Add("I choose this position randomly because it is my first turn.");
+
+            MyTerritories.Add(pick);
+            return pick;
+        }
+
+        private TerritoryPosition CompleteMySet()
+        {
+            DoubleSet set = (DoubleSet)MyDoubleSets[0];
+            TerritoryPosition pick = set.PosAvail;
+            ArrayList reasoning = new ArrayList();
+
+            reasoning.Add(String.Format("WinSet I think I can win from:"));
+            reasoning.Add(String.Format("{0} - {1} - {2}", set.DefiningWinSet.list[0], set.DefiningWinSet.list[1], set.DefiningWinSet.list[2]));
+            reasoning.Add("");
+            reasoning.Add(String.Format("CanWin because:"));
+            reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ]",
+                set.PosAvail, TerritoryPositionState.Avail,
+                set.PosIOwnOne, TerritoryPositionState.Own,
+                set.PosIOwnTwo, TerritoryPositionState.Own));
+
+            setImInterestedIn = set.list;
+            whyImInterestedIn = new ArrayList() { TerritoryPositionState.Avail, TerritoryPositionState.Own, TerritoryPositionState.Own };
+
+            moveReason = MoveReason.CanWin;
+            reasoningAboutMove = reasoning;
+
+            MyTerritories.Add(pick);
+            return pick;
+        }
+
+        private TerritoryPosition CompleteOppSet()
+        {
+            DoubleSet set = (DoubleSet)OppDoubleSets[0];
+            TerritoryPosition pick = set.PosAvail;
+            ArrayList reasoning = new ArrayList();
+
+            reasoning.Add(String.Format("WinSet I think my opponent can win from:"));
+            reasoning.Add(String.Format("{0} - {1} - {2}", set.DefiningWinSet.list[0], set.DefiningWinSet.list[1], set.DefiningWinSet.list[2]));
+            reasoning.Add("");
+            reasoning.Add(String.Format("CanBlock because:"));
+            reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ]",
+                set.PosAvail, TerritoryPositionState.Avail,
+                set.PosIOwnOne, TerritoryPositionState.OppOwn,
+                set.PosIOwnTwo, TerritoryPositionState.OppOwn));
+
+            setImInterestedIn = set.list;
+            whyImInterestedIn = new ArrayList() { TerritoryPositionState.Avail, TerritoryPositionState.OppOwn, TerritoryPositionState.OppOwn };
+
+            moveReason = MoveReason.CanBlock;
+            reasoningAboutMove = reasoning;
+
+            MyTerritories.Add(pick);
+            return pick;
+        }
+
+        private TerritoryPosition BuildDoubleSet()
+        {
+            SingleSet set = (SingleSet)MySingleSets[0];
+            Random rand = new Random();
+            TerritoryPosition pick;
+            ArrayList reasoning = new ArrayList();
+            
+            int whichToPick = rand.Next(0, 1);
+            if (whichToPick == 0)
+            {
+                pick = set.PosAvailOne;
+            }
+            else if (whichToPick == 1)
+            {
+                pick = set.PosAvailTwo;
+            }
+            else
+            {
+                pick = TerritoryPosition.NULL;
+            }
+
+            reasoning.Add(String.Format("WinSet I think I can set myself up for a next turn win from:"));
+            reasoning.Add(String.Format("{0} - {1} - {2}", set.DefiningWinSet.list[0], set.DefiningWinSet.list[1], set.DefiningWinSet.list[2]));
+            reasoning.Add("");
+            reasoning.Add(String.Format("CanSetUpNextTurnWin because:"));
+            reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
+                set.PosIOwn, TerritoryPositionState.Own,
+                set.PosAvailOne, TerritoryPositionState.Avail,
+                set.PosAvailTwo, TerritoryPositionState.Avail));
+
+            setImInterestedIn = set.list;
+            whyImInterestedIn = new ArrayList() {TerritoryPositionState.Own, TerritoryPositionState.Avail, TerritoryPositionState.Avail };
+
+            moveReason = MoveReason.CanSetUpNextTurnWin;
+            reasoningAboutMove = reasoning;
+
+            MyTerritories.Add(pick);
+            return pick;
+        }
+
+        private TerritoryPosition PickRandom()
+        {
+            Random rand = new Random();
+            TerritoryPosition pick = (TerritoryPosition)AvailTerritories[rand.Next(0, AvailTerritories.Count)];
+            
+            moveReason = MoveReason.NoGoodMove;
+            reasoningAboutMove = new ArrayList();
+            reasoningAboutMove.Add("I choose this position randomly because there are no more good moves remaining.");
+
+            MyTerritories.Add(pick);
+            return pick;
+        }
+
+        #endregion
+
+
+        public override String ToString()
+        {
+            return "Smart T3Agent";
+        }
+
+
+
+        #region !!IGNORE!! Project 1+2 Decision Methods
 
         public TerritoryPosition ORIGdecideNextMove()
         {
@@ -476,372 +855,9 @@ namespace TicTacToe
             return TerritoryPosition.NULL;
         }
 
-        public override String ToString()
-        {
-            return "Smart T3Agent";
-        }
+        #endregion
 
-
-        public override void decideNextMove()
-        {
-            bool useOrig = true;
-
-            if (useOrig)
-            {
-                MyPick = NEWdecideNextMove();   //ORIGdecideNextMove();
-
-                Territory claimed = Board[(int)MyPick] as Territory;
-
-                CurrTurnFrame.ClaimedTerritory = claimed;
-                CurrTurnFrame.ReasoningForMove = moveReason;
-                CurrTurnFrame.ReasoningForHowMoveReasonDetermined = reasoningAboutMove;
-                CurrTurnFrame.WinSetImInterestedIn = setImInterestedIn;
-                CurrTurnFrame.WhyImInterestedInThisWinSet = whyImInterestedIn;
-
-                CurrTurnFrame.IsFirstTurn = IsFirstTurn;
-                CurrTurnFrame.CanWin = CanWin;
-                CurrTurnFrame.CanBlock = CanBlock;
-                CurrTurnFrame.CanSetUpNextTurnWin = CanSetUpNextTurnWin;
-                CurrTurnFrame.NoGoodMoveRemaining = NoGoodMoveRemaining;
-            }
-            else
-            {
-                //PreDecisionUpdateTrackedSets();
-                //TerritoryPosition pick = NEWdecideNextMove();
-                //PostDecisionUpdateTracedSets(pick);
-                //return pick;
-                //return TerritoryPosition.NULL;
-            }
-        }
-
-
-
-        private void calculateMySingleSets()
-        {
-            foreach (TerritoryPosition posToConsider in MyTerritories)
-            {
-                var winSetsWithPos = from WinSet set in WinSetDefinitions
-                                     where set.list.Contains(posToConsider)
-                                     select set;
-
-                foreach (WinSet set in winSetsWithPos)
-                {
-                    int ownedCount = 0;
-                    int availCount = 0;
-                    SingleSet singleSet = new SingleSet(set);
-
-                    foreach (TerritoryPosition pos in set.list)
-                    {
-                        if (pos == posToConsider)
-                        {
-                            singleSet.PosIOwn = pos;
-                            ownedCount++;
-                            continue;
-                        }
-                        else if (AvailTerritories.Contains(pos))
-                        {
-                            if (availCount == 0)
-                            {
-                                singleSet.PosAvailOne = pos;
-                                availCount++;
-                            }
-                            else if (availCount == 1)
-                            {
-                                singleSet.PosAvailTwo = pos;
-                                availCount++;
-                            }
-                        }
-                        else if (MyTerritories.Contains(pos))
-                        {
-                            break;
-                        }
-                        else if (OpponentTerritories.Contains(pos))
-                        {
-                            break;
-                        }
-                    }
-
-                    if (ownedCount == 1 && availCount == 2)
-                    {
-                        MySingleSets.Add(singleSet);
-                    }
-                }
-            }
-        }
-
-        private void calculateMyDoubleSets()
-        {
-            foreach (WinSet set in WinSetDefinitions)
-            {
-                int ownedCount = 0;
-                int availCount = 0;
-                DoubleSet doubleSet = new DoubleSet(set);
-                foreach (TerritoryPosition pos in set.list)
-                {
-                    if (MyTerritories.Contains(pos))
-                    {
-                        if (ownedCount == 0)
-                        {
-                            doubleSet.PosIOwnOne = pos;
-                            ownedCount++;
-                        }
-                        else if (ownedCount == 1)
-                        {
-                            doubleSet.PosIOwnTwo = pos;
-                            ownedCount++;
-                        }
-                    }
-                    else if (AvailTerritories.Contains(pos))
-                    {
-                        doubleSet.PosAvail = pos;
-                        availCount++;
-                    }
-                    else if (OpponentTerritories.Contains(pos))
-                    {
-                        break;
-                    }
-                }
-                if (ownedCount == 2 && availCount == 1)
-                {
-                    MyDoubleSets.Add(doubleSet);
-                }
-  
-            }
-        }
-
-        private void calculateOppSingleSets()
-        {
-            foreach (WinSet set in WinSetDefinitions)
-            {
-                int ownedCount = 0;
-                int availCount = 0;
-                SingleSet singleSet = new SingleSet(set);
-                foreach (TerritoryPosition pos in set.list)
-                {
-                    if (AvailTerritories.Contains(pos))
-                    {
-                        if (availCount == 0)
-                        {
-                            singleSet.PosAvailOne = pos;
-                            availCount++;
-                        }
-                        else if (availCount == 1)
-                        {
-                            singleSet.PosAvailTwo = pos;
-                            availCount++;
-                        }
-                    }
-                    else if (OpponentTerritories.Contains(pos))
-                    {
-                        singleSet.PosIOwn = pos;
-                        ownedCount++;
-                    }
-                    else if (MyTerritories.Contains(pos))
-                    {
-                        break;
-                    }
-                }
-                if (ownedCount == 1 && availCount == 2)
-                {
-                    OppSingleSets.Add(singleSet);
-                }
-
-            }
-        }
-
-        private void calculateOppDoubleSets()
-        {
-            foreach (WinSet set in WinSetDefinitions)
-            {
-                int ownedCount = 0;
-                int availCount = 0;
-                DoubleSet doubleSet = new DoubleSet(set);
-                foreach (TerritoryPosition pos in set.list)
-                {
-                    if (OpponentTerritories.Contains(pos))
-                    {
-                        if (ownedCount == 0)
-                        {
-                            doubleSet.PosIOwnOne = pos;
-                            ownedCount++;
-                        }
-                        else if (ownedCount == 1)
-                        {
-                            doubleSet.PosIOwnTwo = pos;
-                            ownedCount++;
-                        }
-                    }
-                    else if (AvailTerritories.Contains(pos))
-                    {
-                        doubleSet.PosAvail = pos;
-                        availCount++;
-                    }
-                    else if (MyTerritories.Contains(pos))
-                    {
-                        break;
-                    }
-                }
-                if (ownedCount == 2 && availCount == 1)
-                {
-                    OppDoubleSets.Add(doubleSet);
-                }
-
-            }
-        }
-
-        public TerritoryPosition NEWdecideNextMove()
-        {
-            //RULE 1: If I do not own any territories yet, Then pick my first one randomly.
-            if (IsFirstTurn)
-            {
-                return BuildSingleSet();
-            }
-
-            //RULE 2: If there is an avail territory that will make me win, Then pick that territory.
-            if (CanWin)
-            {
-                return CompleteMySet();
-            }
-
-            //Rule 3: If there is an avail territory that will make opponent win, Then pick that territory to block them.
-            if (CanBlock)
-            {
-                return CompleteOppSet();
-            }
-
-            //RULE 4: If there is an avail territory in a winSet from which I already own a territory and my opponent does not own a territory,
-            //        Then choose one of the other two avail territories in that winSet.
-            if (CanSetUpNextTurnWin)
-            {
-                return BuildDoubleSet();
-            }
-            
-            //RULE 5: If there are avail territories, Then pick my one randomly.
-            if (NoGoodMoveRemaining)
-            {
-                return PickRandom();
-            }
-
-            return TerritoryPosition.NULL;
-        }
-
-        private TerritoryPosition BuildSingleSet()
-        {
-            Random rand = new Random();
-            TerritoryPosition pick = (TerritoryPosition)AvailTerritories[rand.Next(0, AvailTerritories.Count)];
-
-            moveReason = MoveReason.FirstTurn;
-            reasoningAboutMove = new ArrayList();
-            reasoningAboutMove.Add("I choose this position randomly because it is my first turn.");
-
-            MyTerritories.Add(pick);
-            return pick;
-        }
-
-        private TerritoryPosition CompleteMySet()
-        {
-            DoubleSet set = (DoubleSet)MyDoubleSets[0];
-            TerritoryPosition pick = set.PosAvail;
-            ArrayList reasoning = new ArrayList();
-
-            reasoning.Add(String.Format("WinSet I think I can win from:"));
-            reasoning.Add(String.Format("{0} - {1} - {2}", set.DefiningWinSet.list[0], set.DefiningWinSet.list[1], set.DefiningWinSet.list[2]));
-            reasoning.Add("");
-            reasoning.Add(String.Format("CanWin because:"));
-            reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ]",
-                set.PosAvail, TerritoryPositionState.Avail,
-                set.PosIOwnOne, TerritoryPositionState.Own,
-                set.PosIOwnTwo, TerritoryPositionState.Own));
-
-            setImInterestedIn = set.list;
-            whyImInterestedIn = new ArrayList() { TerritoryPositionState.Avail, TerritoryPositionState.Own, TerritoryPositionState.Own };
-
-            moveReason = MoveReason.CanWin;
-            reasoningAboutMove = reasoning;
-
-            MyTerritories.Add(pick);
-            return pick;
-        }
-
-        private TerritoryPosition CompleteOppSet()
-        {
-            DoubleSet set = (DoubleSet)OppDoubleSets[0];
-            TerritoryPosition pick = set.PosAvail;
-            ArrayList reasoning = new ArrayList();
-
-            reasoning.Add(String.Format("WinSet I think my opponent can win from:"));
-            reasoning.Add(String.Format("{0} - {1} - {2}", set.DefiningWinSet.list[0], set.DefiningWinSet.list[1], set.DefiningWinSet.list[2]));
-            reasoning.Add("");
-            reasoning.Add(String.Format("CanBlock because:"));
-            reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ]",
-                set.PosAvail, TerritoryPositionState.Avail,
-                set.PosIOwnOne, TerritoryPositionState.OppOwn,
-                set.PosIOwnTwo, TerritoryPositionState.OppOwn));
-
-            setImInterestedIn = set.list;
-            whyImInterestedIn = new ArrayList() { TerritoryPositionState.Avail, TerritoryPositionState.OppOwn, TerritoryPositionState.OppOwn };
-
-            moveReason = MoveReason.CanBlock;
-            reasoningAboutMove = reasoning;
-
-            MyTerritories.Add(pick);
-            return pick;
-        }
-
-        private TerritoryPosition BuildDoubleSet()
-        {
-            SingleSet set = (SingleSet)MySingleSets[0];
-            Random rand = new Random();
-            TerritoryPosition pick;
-            ArrayList reasoning = new ArrayList();
-            
-            int whichToPick = rand.Next(0, 1);
-            if (whichToPick == 0)
-            {
-                pick = set.PosAvailOne;
-            }
-            else if (whichToPick == 1)
-            {
-                pick = set.PosAvailTwo;
-            }
-            else
-            {
-                pick = TerritoryPosition.NULL;
-            }
-
-            reasoning.Add(String.Format("WinSet I think I can set myself up for a next turn win from:"));
-            reasoning.Add(String.Format("{0} - {1} - {2}", set.DefiningWinSet.list[0], set.DefiningWinSet.list[1], set.DefiningWinSet.list[2]));
-            reasoning.Add("");
-            reasoning.Add(String.Format("CanSetUpNextTurnWin because:"));
-            reasoning.Add(String.Format("[ {0} - {1} ]  [ {2} - {3} ]  [ {4} - {5} ] ",
-                set.PosIOwn, TerritoryPositionState.Own,
-                set.PosAvailOne, TerritoryPositionState.Avail,
-                set.PosAvailTwo, TerritoryPositionState.Avail));
-
-            setImInterestedIn = set.list;
-            whyImInterestedIn = new ArrayList() {TerritoryPositionState.Own, TerritoryPositionState.Avail, TerritoryPositionState.Avail };
-
-            moveReason = MoveReason.CanSetUpNextTurnWin;
-            reasoningAboutMove = reasoning;
-
-            MyTerritories.Add(pick);
-            return pick;
-        }
-
-        private TerritoryPosition PickRandom()
-        {
-            Random rand = new Random();
-            TerritoryPosition pick = (TerritoryPosition)AvailTerritories[rand.Next(0, AvailTerritories.Count)];
-            
-            moveReason = MoveReason.NoGoodMove;
-            reasoningAboutMove = new ArrayList();
-            reasoningAboutMove.Add("I choose this position randomly because there are no more good moves remaining.");
-
-            MyTerritories.Add(pick);
-            return pick;
-        }
-
-        #region First Attempt to Use Sets Only
+        #region !!IGNORE!! First Attempt to Use Sets Only
 
         /*
         public TerritoryPosition NEWdecideNextMove()
@@ -1021,38 +1037,3 @@ namespace TicTacToe
 
     }
 }
-
-
-/*
-foreach (TerritoryPosition posToConsider in MyTerritories)
-            {
-                var winSetsWithPos = from WinSet set in WinSetDefinitions
-                        where set.list.Contains(posToConsider) && 
-                        select set;
-
-                foreach (WinSet set in winSetsWithPos)
-                {
-                    int count = 0;
-                    foreach (TerritoryPosition pos in set.list)
-                    {
-                        if (MyTerritories.Contains(pos))
-                        {
-                            winningPositions.Insert(count, pos);
-                            conditionForInclusion.Insert(count, TerritoryPositionState.Own);
-                            count++;
-                        }
-                        else if (pos == posToConsider)
-                        {
-                            winningPositions.Insert(count, pos);
-                            conditionForInclusion.Insert(count, TerritoryPositionState.Avail);
-                            count++;
-                        }
-                    }
-                    if (count == 3)
-                    {
-                            
-                    }
-  
-                }
-            }
-*/

@@ -19,6 +19,7 @@ namespace TicTacToe
             moveReason = MoveReason.NavieMove;
         }
 
+
         public override void thinkAtStartOfTurn(int turnNumber, ArrayList availTerritories, ArrayList opponentsTerritories, ArrayList board)
         {
             UpdateMemAboutCurrGameState(availTerritories, opponentsTerritories, board);
@@ -42,9 +43,16 @@ namespace TicTacToe
             CurrTurnFrame = frame;
         }
 
+
+        public override void UpdatePercepts()
+        {
+            // Naive agent doesnt have strategic perceptions
+        }
+        
+
         public override void decideNextMove()
         {
-            MyPick = decideMove();
+            MyPick = ApplyStrategy();
 
             Territory claimed = Board[(int)MyPick] as Territory;
 
@@ -55,20 +63,10 @@ namespace TicTacToe
             CurrTurnFrame.WhyImInterestedInThisWinSet = whyImInterestedIn;
         }
 
-        private TerritoryPosition decideMove()
+        private TerritoryPosition ApplyStrategy()
         {
             int index = rand.Next(0, AvailTerritories.Count);
             TerritoryPosition pick = (TerritoryPosition) AvailTerritories[index];
-
-            String message = " - Naive Agent: \t Random Pick";
-            if (parent.shouldDisplayConsole)
-            {
-                Console.WriteLine(message);
-            }
-            if (parent.shouldDisplayUI)
-            {
-                onNewInfo(message);
-            }
 
             setImInterestedIn = new ArrayList();
             setImInterestedIn.Add(pick);
@@ -84,16 +82,12 @@ namespace TicTacToe
             return pick;
         }
 
-        public override void UpdatePercepts()
-        {
-            // TODO
-        }
 
-        
         public override String ToString()
         {
             return "Naive T3Agent";
         }
+
 
         public override void resetForNewGame()
         {

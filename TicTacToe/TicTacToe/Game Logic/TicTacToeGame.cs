@@ -124,68 +124,13 @@ namespace TicTacToe
 
         public void turn()
         {
-            /*
-            TurnFrame frame = new TurnFrame(TurnNumber, currTurnPlayer, winSetDefinitions);
-            frame.Opponent = otherPlayer;
-            frame.setMyTerritories(currTurnPlayer.MyTerritories);
-            frame.setOpponentsTerritories(otherPlayer.MyTerritories);
-            frame.setAvail(availList);
-            //frame.setBoard(boardList);
-
-            /*
-            String turnMessage = String.Format("\nIt's {0}'s turn: \t [ {1} ]", currTurnPlayer.name, currTurnPlayer.getSymbol());
-            if (shouldDisplayConsole)
-                Console.WriteLine(turnMessage);
-            if (shouldDisplayUI)
-                onNewInfo(turnMessage);
-            
-
-            //Decide move & make it
-            TerritoryPosition pick = currTurnPlayer.makeMove(availList, otherPlayer.MyTerritories, boardList);
-            frame.ClaimedTerritory = claimTerritory(pick);
-
-            frame.setBoard(boardList);
-
-            frame.ReasoningForMove = currTurnPlayer.WhatWasReasoningForMove();
-            frame.ReasoningForHowMoveReasonDetermined = currTurnPlayer.WhatWasReasoningForHowMoveReasonDetermined();
-            frame.WinSetImInterestedIn = currTurnPlayer.WhatWinSetImInterestedIn();
-            frame.WhyImInterestedInThisWinSet = currTurnPlayer.WhyAmImInterestedInThisSet();
-            */
-            //////////////////////////////////////////////////////////////////////////////
-
-            //TurnFrame frame = new TurnFrame(TurnNumber, currTurnPlayer, winSetDefinitions);
-            //frame.Opponent = otherPlayer;
-
             TurnFrame frame = currTurnPlayer.makeMove(availList, otherPlayer.MyTerritories, boardList, TurnNumber);
-
             claimTerritory(frame.ClaimedTerritory.position);
             frame.setPostBoard(boardList);
 
-            printBoard();
-
-            var x = TurnNumber;
-
-            onNewInfo("");
 
             if (isGameOver())
             {
-                String gameoverMessage;
-
-                if (didPlayerWin())
-                    gameoverMessage = String.Format("\nGAME OVER: {0} is the Winner!", currTurnPlayer.name);
-                else
-                    gameoverMessage = String.Format("\nGAME OVER: Draw! Neither player won.");
-
-
-                if (shouldDisplayConsole)
-                {
-                    Console.WriteLine(gameoverMessage);
-                }
-                if (shouldDisplayUI)
-                {
-                    onNewInfo(gameoverMessage);
-                }
-
                 onTurnOver(frame);
                 onGameOver();
             }
@@ -205,9 +150,7 @@ namespace TicTacToe
                     currTurnPlayer = playerOne;
                     otherPlayer = playerTwo;
                 }
-
-                //if (showTurn)
-                    //System.Threading.Thread.Sleep(TimeSpan.FromSeconds(2));
+                
 
                 turn();
             }
@@ -296,26 +239,6 @@ namespace TicTacToe
             playerTwo.setWinSetDefinitions(winSetDefinitions);
         }
 
-        private void printBoard()
-        {
-            String line1 = String.Format("\n{0}  |  {1}  |  {2}", board[0].symbol, board[1].symbol, board[2].symbol);
-            String line2 = String.Format("\n{0}  |  {1}  |  {2}", board[3].symbol, board[4].symbol, board[5].symbol);
-            String line3 = String.Format("\n{0}  |  {1}  |  {2}", board[6].symbol, board[7].symbol, board[8].symbol);
-
-            if (shouldDisplayConsole)
-            {
-                Console.WriteLine(line1);
-                Console.WriteLine(line2);
-                Console.WriteLine(line3);
-            }
-            if (shouldDisplayUI)
-            {
-                onNewInfo(line1);
-                onNewInfo(line2);
-                onNewInfo(line3);
-            }
-
-        }
 
         public String GenerateGameOverMessage()
         {

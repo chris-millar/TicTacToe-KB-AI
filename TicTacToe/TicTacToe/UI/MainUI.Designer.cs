@@ -37,9 +37,10 @@
             CanBlock_ListViewItem = new System.Windows.Forms.ListViewItem("CanBlock");
             CanSetUpWin_ListViewItem = new System.Windows.Forms.ListViewItem("CanSetUpWin");
             NoGoodMove_ListViewItem = new System.Windows.Forms.ListViewItem("NoGoodMove");
-            MyPPWS_ListViewItem = new System.Windows.Forms.ListViewItem("My PPWS");
-            MyPWS_ListViewItem = new System.Windows.Forms.ListViewItem("My PWS");
-            OppPWS_ListViewItem = new System.Windows.Forms.ListViewItem("Opp PWS");
+            MySingleSets_ListViewItem = new System.Windows.Forms.ListViewItem("My SingleSets");
+            MyDoubleSets_ListViewItem = new System.Windows.Forms.ListViewItem("My DoubleSets");
+            OppSingleSets_ListViewItem = new System.Windows.Forms.ListViewItem("Opp SingleSets");
+            OppDoubleSets_ListViewItem = new System.Windows.Forms.ListViewItem("Opp DoubleSets");
             MyTerritory_ListViewItem.Tag = AgentPercepts.MyTerr;
             OppTerritory_ListViewItem.Tag = AgentPercepts.OppTerr;
             AvailTerritory_ListViewItem.Tag = AgentPercepts.AvailTerr;
@@ -49,9 +50,10 @@
             CanBlock_ListViewItem.Tag = AgentPercepts.CanBlock;
             CanSetUpWin_ListViewItem.Tag = AgentPercepts.CanSetUpNextTurnWin;
             NoGoodMove_ListViewItem.Tag = AgentPercepts.NoGoodMove;
-            MyPPWS_ListViewItem.Tag = AgentPercepts.MySingleSets;
-            MyPWS_ListViewItem.Tag = AgentPercepts.MyDoubleSets;
-            OppPWS_ListViewItem.Tag = AgentPercepts.OppDoubleSets;
+            MySingleSets_ListViewItem.Tag = AgentPercepts.MySingleSets;
+            MyDoubleSets_ListViewItem.Tag = AgentPercepts.MyDoubleSets;
+            OppSingleSets_ListViewItem.Tag = AgentPercepts.OppSingleSets;
+            OppDoubleSets_ListViewItem.Tag = AgentPercepts.OppDoubleSets;
             this.player1_label = new System.Windows.Forms.Label();
             this.player2_label = new System.Windows.Forms.Label();
             this.player1_comboBox = new System.Windows.Forms.ComboBox();
@@ -288,9 +290,10 @@
             OppTerritory_ListViewItem,
             AvailTerritory_ListViewItem,
             WinSets_ListViewItem,
-            MyPPWS_ListViewItem,
-            MyPWS_ListViewItem,
-            OppPWS_ListViewItem});
+            MySingleSets_ListViewItem,
+            MyDoubleSets_ListViewItem,
+            OppSingleSets_ListViewItem,
+            OppDoubleSets_ListViewItem});
             this.Percept_ListView.LabelWrap = false;
             this.Percept_ListView.Location = new System.Drawing.Point(12, 255);
             this.Percept_ListView.MultiSelect = false;
@@ -627,9 +630,10 @@
         System.Windows.Forms.ListViewItem CanBlock_ListViewItem;
         System.Windows.Forms.ListViewItem CanSetUpWin_ListViewItem;
         System.Windows.Forms.ListViewItem NoGoodMove_ListViewItem;
-        System.Windows.Forms.ListViewItem MyPPWS_ListViewItem;
-        System.Windows.Forms.ListViewItem MyPWS_ListViewItem;
-        System.Windows.Forms.ListViewItem OppPWS_ListViewItem;
+        System.Windows.Forms.ListViewItem MySingleSets_ListViewItem;
+        System.Windows.Forms.ListViewItem MyDoubleSets_ListViewItem;
+        System.Windows.Forms.ListViewItem OppDoubleSets_ListViewItem;
+        System.Windows.Forms.ListViewItem OppSingleSets_ListViewItem;
         private System.Windows.Forms.Button CyclePercept_Button;
     }
 }
