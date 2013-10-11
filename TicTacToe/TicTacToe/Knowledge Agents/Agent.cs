@@ -22,6 +22,7 @@ namespace TicTacToe
         
         
         // Short Term Memory //
+        public ArrayList Board;
         public ArrayList AvailTerritories;
         public ArrayList OpponentTerritories;
         public ArrayList MyTerritories;
@@ -35,12 +36,14 @@ namespace TicTacToe
         public ArrayList whyImInterestedIn;
 
         public ArrayList ListOfCurrGameTurnFrames;
+        public TurnFrame CurrTurnFrame;
         public int GameIndex;
         public int TurnIndex;
 
-        
 
-        public abstract TerritoryPosition decideNextMove();
+        public abstract void UpdatePercepts();
+        public abstract void decideNextMove();
+        public abstract void thinkAtStartOfTurn(int turnNumber, ArrayList availTerritories, ArrayList opponentTerritories, ArrayList board);
 
         public void setParent(Player parent)
         {
@@ -52,10 +55,11 @@ namespace TicTacToe
             WinSetDefinitions = definitions;
         }
 
-        public void UpdateMemAboutCurrGameState(ArrayList availTerritories, ArrayList opponentsTerritories)
+        public void UpdateMemAboutCurrGameState(ArrayList availTerritories, ArrayList opponentsTerritories, ArrayList board)
         {
             AvailTerritories = availTerritories;
             OpponentTerritories = opponentsTerritories;
+            Board = board;
         }
 
         protected void onNewInfo(String message)
@@ -73,18 +77,7 @@ namespace TicTacToe
             TurnIndex = 0;
         }
 
-        public virtual void resetForNewGame()
-        {
-            MyTerritories = new ArrayList();
-            OpponentTerritories = new ArrayList();
-            AvailTerritories = new ArrayList();
-            moveReason = MoveReason.NULL;
-            reasoningAboutMove = new ArrayList();
-
-            TurnIndex = 0;
-            ListOfCurrGameTurnFrames = new ArrayList();
-            ListOfGameFrames.Add(ListOfCurrGameTurnFrames);
-        }
+        public abstract void resetForNewGame();
 
         public MoveReason WhatWasReasoningForMove()
         {

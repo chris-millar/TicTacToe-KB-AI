@@ -66,8 +66,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExplicitDomainKnowledge\DoubleSet.cs" />
     <Compile Include="ExplicitDomainKnowledge\GameFrame.cs" />
     <Compile Include="ExplicitDomainKnowledge\MoveReasonEnum.cs" />
+    <Compile Include="ExplicitDomainKnowledge\SingleSet.cs" />
     <Compile Include="ExplicitDomainKnowledge\WinSet.cs" />
     <Compile Include="Game Logic\GameOverStateEnum.cs" />
     <Compile Include="Game Logic\GameVocabEnum.cs" />

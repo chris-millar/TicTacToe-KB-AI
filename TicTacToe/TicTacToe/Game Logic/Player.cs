@@ -13,6 +13,8 @@ namespace TicTacToe
         public String symbol;
         private Agent agent;
 
+        public Player Opponent;
+
         public ArrayList MyTerritories
         {
             get { return agent.MyTerritories; }
@@ -48,11 +50,13 @@ namespace TicTacToe
             onNewInfo(message);
         }
 
-        public TerritoryPosition makeMove(ArrayList availTerritories, ArrayList opponentsTerritories, ArrayList board)
+        public TurnFrame makeMove(ArrayList availTerritories, ArrayList opponentsTerritories, ArrayList board, int turnNumber)
         {
-            agent.UpdateMemAboutCurrGameState(availTerritories, opponentsTerritories);
-            TerritoryPosition pick = agent.decideNextMove();
-            return pick;
+            agent.thinkAtStartOfTurn(turnNumber, availTerritories, opponentsTerritories, board);
+            
+            agent.decideNextMove();            
+           
+            return agent.CurrTurnFrame;
         }
 
         public void setWinSetDefinitions(ArrayList definitions)

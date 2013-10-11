@@ -70,6 +70,12 @@ namespace TicTacToe
             playerTwo.UpdateDisplayOptions(shouldDisplayConsole, shouldDisplayUI);
             playerTwo.NewInfo += new EventHandler(playerTwo_NewInfo);
 
+            playerOne.resetForNewGame();
+            playerTwo.resetForNewGame();
+
+            playerOne.Opponent = playerTwo;
+            playerTwo.Opponent = playerOne;
+
             initBoard();
             initWinSetDefinitions();
             
@@ -118,6 +124,7 @@ namespace TicTacToe
 
         public void turn()
         {
+            /*
             TurnFrame frame = new TurnFrame(TurnNumber, currTurnPlayer, winSetDefinitions);
             frame.Opponent = otherPlayer;
             frame.setMyTerritories(currTurnPlayer.MyTerritories);
@@ -131,7 +138,7 @@ namespace TicTacToe
                 Console.WriteLine(turnMessage);
             if (shouldDisplayUI)
                 onNewInfo(turnMessage);
-            */
+            
 
             //Decide move & make it
             TerritoryPosition pick = currTurnPlayer.makeMove(availList, otherPlayer.MyTerritories, boardList);
@@ -143,13 +150,16 @@ namespace TicTacToe
             frame.ReasoningForHowMoveReasonDetermined = currTurnPlayer.WhatWasReasoningForHowMoveReasonDetermined();
             frame.WinSetImInterestedIn = currTurnPlayer.WhatWinSetImInterestedIn();
             frame.WhyImInterestedInThisWinSet = currTurnPlayer.WhyAmImInterestedInThisSet();
-
+            */
             //////////////////////////////////////////////////////////////////////////////
 
             //TurnFrame frame = new TurnFrame(TurnNumber, currTurnPlayer, winSetDefinitions);
             //frame.Opponent = otherPlayer;
 
-            
+            TurnFrame frame = currTurnPlayer.makeMove(availList, otherPlayer.MyTerritories, boardList, TurnNumber);
+
+            claimTerritory(frame.ClaimedTerritory.position);
+            frame.setPostBoard(boardList);
 
             printBoard();
 

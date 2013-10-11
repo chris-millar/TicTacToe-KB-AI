@@ -238,7 +238,8 @@ namespace TicTacToe
 
             for (int i = 0; i < 9; i++)
             {
-                ((Button)board.BoardButtons[i]).Text = ((Territory)frame.Board[i]).symbol;
+                //((Button)board.BoardButtons[i]).Text = ((Territory)frame.Board[i]).symbol;
+                ((Button)board.BoardButtons[i]).Text = ((Territory)frame.PostBoard[i]).symbol;
             }
 
             int index = (int) frame.ClaimedTerritory.position;
@@ -394,6 +395,23 @@ namespace TicTacToe
                         cyclePerceptSize = frame.MySingleSets.Count;
                         cyclePerceptValue = 0;
                     }
+                }
+
+                if (frame.MySingleSets != null && frame.MySingleSets.Count > 0)
+                {
+                    SingleSet set = (SingleSet)frame.MySingleSets[cyclePerceptValue];
+                    
+                    int OwnIndex = (int)set.PosIOwn;
+                    ((Button)board.BoardButtons[OwnIndex]).Text = frame.player.symbol;
+                    ((Button)board.BoardButtons[OwnIndex]).BackColor = OwnColor;
+
+                    int AvailIndex = (int)set.PosAvailOne;
+                    ((Button)board.BoardButtons[AvailIndex]).Text = ".";
+                    ((Button)board.BoardButtons[AvailIndex]).BackColor = AvailColor;
+
+                    AvailIndex = (int)set.PosAvailTwo;
+                    ((Button)board.BoardButtons[AvailIndex]).Text = ".";
+                    ((Button)board.BoardButtons[AvailIndex]).BackColor = AvailColor;
                 }
             }
             else if (percept == AgentPercepts.MyDoubleSets)

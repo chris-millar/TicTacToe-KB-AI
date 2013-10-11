@@ -19,7 +19,43 @@ namespace TicTacToe
             moveReason = MoveReason.NavieMove;
         }
 
-        public override TerritoryPosition decideNextMove()
+        public override void thinkAtStartOfTurn(int turnNumber, ArrayList availTerritories, ArrayList opponentsTerritories, ArrayList board)
+        {
+            UpdateMemAboutCurrGameState(availTerritories, opponentsTerritories, board);
+
+            TurnFrame frame = new TurnFrame(turnNumber, parent, WinSetDefinitions);
+            frame.Opponent = parent.Opponent;
+            frame.setMyTerritories(MyTerritories);
+            frame.setOpponentsTerritories(OpponentTerritories);
+            frame.setAvail(AvailTerritories);
+            frame.setPreBoard(Board);
+
+            UpdatePercepts();
+            frame.MySingleSets = null;
+            frame.MyDoubleSets = null;
+            frame.OppSingleSets = null;
+            frame.OppDoubleSets = null;
+
+            frame.GameFrameID = GameIndex;
+            ListOfCurrGameTurnFrames.Add(frame);
+
+            CurrTurnFrame = frame;
+        }
+
+        public override void decideNextMove()
+        {
+            MyPick = decideMove();
+
+            Territory claimed = Board[(int)MyPick] as Territory;
+
+            CurrTurnFrame.ClaimedTerritory = claimed;
+            CurrTurnFrame.ReasoningForMove = moveReason;
+            CurrTurnFrame.ReasoningForHowMoveReasonDetermined = reasoningAboutMove;
+            CurrTurnFrame.WinSetImInterestedIn = setImInterestedIn;
+            CurrTurnFrame.WhyImInterestedInThisWinSet = whyImInterestedIn;
+        }
+
+        private TerritoryPosition decideMove()
         {
             int index = rand.Next(0, AvailTerritories.Count);
             TerritoryPosition pick = (TerritoryPosition) AvailTerritories[index];
@@ -48,10 +84,28 @@ namespace TicTacToe
             return pick;
         }
 
+        public override void UpdatePercepts()
+        {
+            // TODO
+        }
+
         
         public override String ToString()
         {
             return "Naive T3Agent";
+        }
+
+        public override void resetForNewGame()
+        {
+            MyTerritories = new ArrayList();
+            OpponentTerritories = new ArrayList();
+            AvailTerritories = new ArrayList();
+            moveReason = MoveReason.NULL;
+            reasoningAboutMove = new ArrayList();
+
+            TurnIndex = 0;
+            ListOfCurrGameTurnFrames = new ArrayList();
+            ListOfGameFrames.Add(ListOfCurrGameTurnFrames);
         }
     }
 }
