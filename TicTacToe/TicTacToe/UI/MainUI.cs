@@ -425,6 +425,24 @@ namespace TicTacToe
                         cyclePerceptValue = 0;
                     }
                 }
+
+                if (frame.MyDoubleSets != null && frame.MyDoubleSets.Count > 0)
+                {
+                    DoubleSet set = (DoubleSet)frame.MyDoubleSets[cyclePerceptValue];
+
+                    int OwnIndex = (int)set.PosIOwnOne;
+                    ((Button)board.BoardButtons[OwnIndex]).Text = frame.player.symbol;
+                    ((Button)board.BoardButtons[OwnIndex]).BackColor = OwnColor;
+
+                    OwnIndex = (int)set.PosIOwnTwo;
+                    ((Button)board.BoardButtons[OwnIndex]).Text = frame.player.symbol;
+                    ((Button)board.BoardButtons[OwnIndex]).BackColor = OwnColor;
+
+                    int AvailIndex = (int)set.PosAvail;
+                    ((Button)board.BoardButtons[AvailIndex]).Text = ".";
+                    ((Button)board.BoardButtons[AvailIndex]).BackColor = AvailColor;
+                }
+
             }
             else if (percept == AgentPercepts.OppSingleSets)
             {
@@ -449,6 +467,24 @@ namespace TicTacToe
                         cyclePerceptValue = 0;
                     }
                 }
+
+                if (frame.OppDoubleSets != null && frame.OppDoubleSets.Count > 0)
+                {
+                    DoubleSet set = (DoubleSet)frame.OppDoubleSets[cyclePerceptValue];
+
+                    int OwnIndex = (int)set.PosIOwnOne;
+                    ((Button)board.BoardButtons[OwnIndex]).Text = frame.Opponent.symbol;
+                    ((Button)board.BoardButtons[OwnIndex]).BackColor = OppColor;
+
+                    OwnIndex = (int)set.PosIOwnTwo;
+                    ((Button)board.BoardButtons[OwnIndex]).Text = frame.Opponent.symbol;
+                    ((Button)board.BoardButtons[OwnIndex]).BackColor = OppColor;
+
+                    int AvailIndex = (int)set.PosAvail;
+                    ((Button)board.BoardButtons[AvailIndex]).Text = ".";
+                    ((Button)board.BoardButtons[AvailIndex]).BackColor = AvailColor;
+                }
+
             }
 
             return board;

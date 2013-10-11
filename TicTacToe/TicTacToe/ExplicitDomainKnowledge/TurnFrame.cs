@@ -33,6 +33,13 @@ namespace TicTacToe
         public ArrayList OppSingleSets;
         public ArrayList OppDoubleSets;
 
+
+        public bool IsFirstTurn;
+        public bool CanWin;
+        public bool CanBlock;
+        public bool CanSetUpNextTurnWin;
+        public bool NoGoodMoveRemaining;
+
         public ArrayList WinSetDefinitions;
 
         public int GameFrameID;
