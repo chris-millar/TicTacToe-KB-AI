@@ -167,7 +167,7 @@ namespace TicTacToe
 
         private void HundredGames_RadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            onRadioButtonPressed(100);
+            onRadioButtonPressed(10000);
         }
 
         private void player2_label_Click(object sender, EventArgs e)

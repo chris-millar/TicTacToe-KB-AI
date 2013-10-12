@@ -276,6 +276,10 @@ namespace TicTacToe
             initBoard();
             playerOne.resetForNewGame();
             playerTwo.resetForNewGame();
+
+            playerOne.Opponent = playerTwo;
+            playerTwo.Opponent = playerOne;
+
             TurnNumber = 1;
             gameOverState = GameOverState.NULL;
         }
